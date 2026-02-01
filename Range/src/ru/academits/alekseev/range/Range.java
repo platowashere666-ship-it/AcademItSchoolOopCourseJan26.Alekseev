@@ -9,20 +9,20 @@ public class Range {
         this.to = to;
     }
 
-    public void setTo(double to) {
-        this.to = to;
-    }
-
-    public void setFrom(double from) {
-        this.from = from;
-    }
-
     public double getTo() {
         return to;
     }
 
+    public void setTo(double to) {
+        this.to = to;
+    }
+
     public double getFrom() {
         return from;
+    }
+
+    public void setFrom(double from) {
+        this.from = from;
     }
 
     public double getLength() {
@@ -33,57 +33,51 @@ public class Range {
         return point >= from && point <= to;
     }
 
-    public Range getRangeIntersection(Range other) {
-        double maxFrom = Math.max(this.from, other.from);
-        double minTo = Math.min(this.to, other.to);
+    public Range getIntersection(Range range) {
+        double maxFrom = Math.max(from, range.from);
+        double minTo = Math.min(to, range.to);
 
-        if (maxFrom <= minTo) {
+        if (maxFrom < minTo) {
             return new Range(maxFrom, minTo);
         }
 
         return null;
     }
 
-    public Range[] getRangeUnion(Range other) {
-        double left = Math.min(this.from, other.from);
-        double right = Math.max(this.to, other.to);
-
-        if (other.from <= this.to && other.to >= this.from) {
-            Range result = new Range(left, right);
-
-            return new Range[]{result};
+    public Range[] getUnion(Range range) {
+        if (range.from <= to && range.to >= from) {
+            return new Range[]{new Range(Math.min(from, range.from), Math.max(to, range.to))};
         }
 
-        if (this.from > other.from) {
-            return new Range[]{other, this};
+        if (from < range.from) {
+            return new Range[]{new Range(from, to), new Range(range.from, range.to)};
         }
 
-        return new Range[]{this, other};
+        return new Range[]{new Range(range.from, range.to), new Range(from, to)};
     }
 
-    public Range[] getRangeDifference(Range other) {
-        if (other.to < this.from || other.from > this.to) {
-            return new Range[]{this};
+    public Range[] getDifference(Range range) {
+        if (range.to < from || range.from > to) {
+            return new Range[]{new Range(from, to)};
         }
 
-        if (other.from <= this.from && other.to >= this.to) {
+        if (range.from <= from && range.to >= to) {
             return new Range[0];
         }
 
-        Range[] result = new Range[2];
-        int i = 0;
-
-        if (this.from < other.from) {
-            result[i++] = new Range(this.from, other.from);
+        if (from < range.from && to > range.to) {
+            return new Range[]{new Range(from, range.from), new Range(range.to, to)};
         }
 
-        if (this.to > other.to) {
-            result[i++] = new Range(other.to, this.to);
+        if (from < range.from) {
+            return new Range[]{new Range(from, range.from)};
         }
 
-        Range[] trimmedResult = new Range[i];
-        System.arraycopy(result, 0, trimmedResult, 0, i);
+        return new Range[]{new Range(range.to, to)};
+    }
 
-        return trimmedResult;
+    @Override
+    public String toString() {
+        return String.format("[%.2f, %.2f]", from, to);
     }
 }
