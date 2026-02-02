@@ -30,7 +30,7 @@ public class Main {
         Range[] difference = range1.getDifference(range2);
 
         if (difference.length == 0) {
-            System.out.println("Разность первого и второго диапазона равна нулю");
+            System.out.println("Разность первого и второго диапазона пустая");
         } else {
             System.out.println("Разность первого и второго диапазона: " + Arrays.toString(difference));
         }
