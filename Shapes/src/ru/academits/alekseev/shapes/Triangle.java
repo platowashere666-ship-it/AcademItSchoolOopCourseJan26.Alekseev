@@ -1,4 +1,4 @@
-package ru.academits.alekseev.shape;
+package ru.academits.alekseev.shapes;
 
 public class Triangle implements Shape {
     private final double x1;
@@ -19,6 +19,34 @@ public class Triangle implements Shape {
         this.y3 = y3;
     }
 
+    public double getX1() {
+        return x1;
+    }
+
+    public double getX2() {
+        return x2;
+    }
+
+    public double getX3() {
+        return x3;
+    }
+
+    public double getY1() {
+        return y1;
+    }
+
+    public double getY2() {
+        return y2;
+    }
+
+    public double getY3() {
+        return y3;
+    }
+
+    public double getSideLength(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
+
     @Override
     public double getWidth() {
         return Math.max(x1, Math.max(x2, x3)) - Math.min(x1, Math.min(x2, x3));
@@ -36,16 +64,13 @@ public class Triangle implements Shape {
 
     @Override
     public double getPerimeter() {
-        double sideALength = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-        double sideBLength = Math.sqrt(Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2));
-        double sideCLength = Math.sqrt(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2));
-
-        return sideALength + sideBLength + sideCLength;
+        return getSideLength(x1, y1, x2, y2) + getSideLength(x2, y2, x3, y3) + getSideLength(x1, y1, x3, y3);
     }
 
     @Override
     public String toString() {
-        return "Треугольник";
+        return "Треугольник\r\nКоординаты:\r\nX1: " + getX1() + " Y1: " + getY1()
+                + "\r\nX2: " + getX2() + " Y2: " + getY2() + "\r\nX3: " + getX3() + " Y3: " + getY3();
     }
 
     @Override
@@ -62,7 +87,16 @@ public class Triangle implements Shape {
     }
 
     @Override
-    public boolean equals(Shape shape) {
-        return shape.getClass() == this.getClass();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null) return false;
+
+        if (getClass() != o.getClass()) return false;
+
+        Triangle triangle = (Triangle) o;
+
+        return triangle.x1 == x1 && triangle.x2 == x2 && triangle.x3 == x3
+                && triangle.y1 == y1 && triangle.y2 == y2 && triangle.y3 == y3;
     }
 }

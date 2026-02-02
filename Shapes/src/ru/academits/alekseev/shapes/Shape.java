@@ -1,4 +1,4 @@
-package ru.academits.alekseev.shape;
+package ru.academits.alekseev.shapes;
 
 public interface Shape {
     double getWidth();
@@ -8,6 +8,4 @@ public interface Shape {
     double getArea();
 
     double getPerimeter();
-
-    boolean equals(Shape shape);
 }

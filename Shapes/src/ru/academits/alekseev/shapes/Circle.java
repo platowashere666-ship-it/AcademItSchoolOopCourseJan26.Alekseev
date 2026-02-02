@@ -1,10 +1,14 @@
-package ru.academits.alekseev.shape;
+package ru.academits.alekseev.shapes;
 
 public class Circle implements Shape {
     private final double radius;
 
     public Circle(double radius) {
         this.radius = radius;
+    }
+
+    public double getRadius() {
+        return radius;
     }
 
     @Override
@@ -19,7 +23,7 @@ public class Circle implements Shape {
 
     @Override
     public double getArea() {
-        return Math.pow(radius, 2) * Math.PI;
+        return radius * radius * Math.PI;
     }
 
     @Override
@@ -29,7 +33,7 @@ public class Circle implements Shape {
 
     @Override
     public String toString() {
-        return "Окружность";
+        return "Окружность\r\nРадиус: " + getRadius();
     }
 
     @Override
@@ -41,7 +45,15 @@ public class Circle implements Shape {
     }
 
     @Override
-    public boolean equals(Shape shape) {
-        return shape.getClass() == this.getClass();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null) return false;
+
+        if (getClass() != o.getClass()) return false;
+
+        Circle circle = (Circle) o;
+
+        return circle.radius == radius;
     }
 }

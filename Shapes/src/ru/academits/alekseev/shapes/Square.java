@@ -1,10 +1,14 @@
-package ru.academits.alekseev.shape;
+package ru.academits.alekseev.shapes;
 
 public class Square implements Shape {
     private final double sideLength;
 
     public Square(double sideLength) {
         this.sideLength = sideLength;
+    }
+
+    public double getSideLength() {
+        return sideLength;
     }
 
     @Override
@@ -29,7 +33,7 @@ public class Square implements Shape {
 
     @Override
     public String toString() {
-        return "Квадрат";
+        return "Квадрат\r\nДлина стороны: " + getSideLength();
     }
 
     @Override
@@ -41,7 +45,15 @@ public class Square implements Shape {
     }
 
     @Override
-    public boolean equals(Shape shape) {
-        return shape.getClass() == this.getClass();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null) return false;
+
+        if (getClass() != o.getClass()) return false;
+
+        Square square = (Square) o;
+
+        return square.sideLength == sideLength;
     }
 }

@@ -1,24 +1,17 @@
-package ru.academits.alekseev.shape_main;
+package ru.academits.alekseev.shapes_main;
 
-import ru.academits.alekseev.shape.*;
+import ru.academits.alekseev.shapes.*;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class Main {
     public static void main(String[] args) {
-        Shape[] shapes = new Shape[7];
+        Shape[] shapes = new Shape[]{new Square(6), new Rectangle(8, 5.5),
+                new Circle(7.5), new Triangle(1, 6, 2.5, 10, 4, 12),
+                new Square(2)};
 
-        shapes[0] = new Square(10);
-        shapes[1] = new Rectangle(8, 10);
-        shapes[2] = new Circle(7.5);
-        shapes[3] = new Triangle(6.7, 5.4, 2.3, 4.5, 7.9, 4.3);
-        shapes[4] = new Square(8);
-        shapes[5] = new Rectangle(3, 6.7);
-        shapes[6] = new Circle(12);
-
-        Shape maxAreaShape = getMaxArea(shapes);
-        Shape secondMaxPerimeterShape = getSecondMaxPerimeter(shapes);
+        Shape maxAreaShape = getMaxAreaShape(shapes);
+        Shape secondMaxPerimeterShape = getSecondMaxPerimeterShape(shapes);
 
         System.out.printf("Фигура с наибольшей площадью: %s%n", maxAreaShape.toString());
         System.out.printf("Высота: %.2f%n", maxAreaShape.getHeight());
@@ -35,19 +28,37 @@ public class Main {
         System.out.printf("Хэш: %d%n%n", secondMaxPerimeterShape.hashCode());
 
         if (maxAreaShape.equals(secondMaxPerimeterShape)) {
-            System.out.println("Фигуры одного типа!");
+            System.out.println("Фигуры одинаковы!");
         } else {
-            System.out.println("Фигуры разные по типу!");
+            System.out.println("Фигуры разные!");
         }
     }
 
-    private static Shape getMaxArea(Shape[] shapes) {
-        Arrays.sort(shapes, Comparator.comparingDouble(Shape::getArea).reversed());
+    private static Shape getMaxAreaShape(Shape[] shapes) {
+        Arrays.sort(shapes, (shape1, shape2) -> {
+            double area1 = shape1.getArea();
+            double area2 = shape2.getArea();
+
+            if (area1 > area2) return -1;
+            if (area2 > area1) return 1;
+
+            return 0;
+        });
+
         return shapes[0];
     }
 
-    private static Shape getSecondMaxPerimeter(Shape[] shapes) {
-        Arrays.sort(shapes, Comparator.comparingDouble(Shape::getPerimeter).reversed());
+    private static Shape getSecondMaxPerimeterShape(Shape[] shapes) {
+        Arrays.sort(shapes, (shape1, shape2) -> {
+            double perimeter1 = shape1.getPerimeter();
+            double perimeter2 = shape2.getPerimeter();
+
+            if (perimeter1 > perimeter2) return -1;
+            if (perimeter2 > perimeter1) return 1;
+
+            return 0;
+        });
+
         return shapes[1];
     }
 }
