@@ -33,7 +33,7 @@ public class Circle implements Shape {
 
     @Override
     public String toString() {
-        return "Окружность Радиус: " + radius;
+        return "Окружность. Радиус: " + radius;
     }
 
     @Override

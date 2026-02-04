@@ -1,8 +1,8 @@
 package ru.academits.alekseev.shapes_main;
 
 import ru.academits.alekseev.shapes.*;
-import ru.academits.alekseev.shapes_comparators.AreaComparator;
-import ru.academits.alekseev.shapes_comparators.PerimeterComparator;
+import ru.academits.alekseev.shapes_comparators.ShapesAreaComparator;
+import ru.academits.alekseev.shapes_comparators.ShapesPerimeterComparator;
 
 import java.util.Arrays;
 
@@ -39,13 +39,13 @@ public class Main {
     }
 
     private static Shape getMaxAreaShape(Shape[] shapes) {
-        Arrays.sort(shapes, new AreaComparator());
+        Arrays.sort(shapes, new ShapesAreaComparator());
 
         return shapes[shapes.length - 1];
     }
 
     private static Shape getSecondMaxPerimeterShape(Shape[] shapes) {
-        Arrays.sort(shapes, new PerimeterComparator());
+        Arrays.sort(shapes, new ShapesPerimeterComparator());
 
         return shapes[shapes.length - 2];
     }

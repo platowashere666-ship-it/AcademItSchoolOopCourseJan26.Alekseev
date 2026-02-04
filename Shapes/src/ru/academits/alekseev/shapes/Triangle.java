@@ -69,8 +69,8 @@ public class Triangle implements Shape {
 
     @Override
     public String toString() {
-        return "Треугольник Координаты: X1: " + x1 + " Y1: " + y1
-                + " X2: " + x2 + " Y2: " + y2 + " X3: " + x3 + " Y3: " + y3;
+        return "Треугольник. Координаты: X1: " + x1 + ", Y1: " + y1
+                + ", X2: " + x2 + ", Y2: " + y2 + ", X3: " + x3 + ", Y3: " + y3;
     }
 
     @Override
