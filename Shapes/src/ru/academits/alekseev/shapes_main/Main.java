@@ -1,14 +1,18 @@
 package ru.academits.alekseev.shapes_main;
 
 import ru.academits.alekseev.shapes.*;
+import ru.academits.alekseev.shapes_comparators.AreaComparator;
+import ru.academits.alekseev.shapes_comparators.PerimeterComparator;
 
 import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        Shape[] shapes = new Shape[]{new Square(6), new Rectangle(8, 5.5),
+        Shape[] shapes = {
+                new Square(6), new Rectangle(8, 5.5),
                 new Circle(7.5), new Triangle(1, 6, 2.5, 10, 4, 12),
-                new Square(2)};
+                new Square(2)
+        };
 
         Shape maxAreaShape = getMaxAreaShape(shapes);
         Shape secondMaxPerimeterShape = getSecondMaxPerimeterShape(shapes);
@@ -35,30 +39,14 @@ public class Main {
     }
 
     private static Shape getMaxAreaShape(Shape[] shapes) {
-        Arrays.sort(shapes, (shape1, shape2) -> {
-            double area1 = shape1.getArea();
-            double area2 = shape2.getArea();
+        Arrays.sort(shapes, new AreaComparator());
 
-            if (area1 > area2) return -1;
-            if (area2 > area1) return 1;
-
-            return 0;
-        });
-
-        return shapes[0];
+        return shapes[shapes.length - 1];
     }
 
     private static Shape getSecondMaxPerimeterShape(Shape[] shapes) {
-        Arrays.sort(shapes, (shape1, shape2) -> {
-            double perimeter1 = shape1.getPerimeter();
-            double perimeter2 = shape2.getPerimeter();
+        Arrays.sort(shapes, new PerimeterComparator());
 
-            if (perimeter1 > perimeter2) return -1;
-            if (perimeter2 > perimeter1) return 1;
-
-            return 0;
-        });
-
-        return shapes[1];
+        return shapes[shapes.length - 2];
     }
 }

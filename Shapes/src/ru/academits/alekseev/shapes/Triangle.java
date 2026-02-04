@@ -43,7 +43,7 @@ public class Triangle implements Shape {
         return y3;
     }
 
-    public double getSideLength(double x1, double y1, double x2, double y2) {
+    private static double getSideLength(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
@@ -69,8 +69,8 @@ public class Triangle implements Shape {
 
     @Override
     public String toString() {
-        return "Треугольник\r\nКоординаты:\r\nX1: " + getX1() + " Y1: " + getY1()
-                + "\r\nX2: " + getX2() + " Y2: " + getY2() + "\r\nX3: " + getX3() + " Y3: " + getY3();
+        return "Треугольник Координаты: X1: " + x1 + " Y1: " + y1
+                + " X2: " + x2 + " Y2: " + y2 + " X3: " + x3 + " Y3: " + y3;
     }
 
     @Override
@@ -88,11 +88,13 @@ public class Triangle implements Shape {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null) return false;
-
-        if (getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Triangle triangle = (Triangle) o;
 

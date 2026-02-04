@@ -33,7 +33,7 @@ public class Square implements Shape {
 
     @Override
     public String toString() {
-        return "Квадрат\r\nДлина стороны: " + getSideLength();
+        return "Квадрат Длина стороны: " + sideLength;
     }
 
     @Override
@@ -46,11 +46,13 @@ public class Square implements Shape {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null) return false;
-
-        if (getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Square square = (Square) o;
 

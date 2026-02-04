@@ -4,9 +4,9 @@ public class Rectangle implements Shape {
     private final double width;
     private final double height;
 
-    public Rectangle(double sideALength, double sideBLength) {
-        this.width = sideALength;
-        this.height = sideBLength;
+    public Rectangle(double width, double height) {
+        this.width = width;
+        this.height = height;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class Rectangle implements Shape {
 
     @Override
     public String toString() {
-        return "Прямоугольник";
+        return "Прямоугольник Ширина: " + width + " Высота: " + height;
     }
 
     @Override
@@ -45,11 +45,13 @@ public class Rectangle implements Shape {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null) return false;
-
-        if (getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Rectangle rectangle = (Rectangle) o;
 

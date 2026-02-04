@@ -33,7 +33,7 @@ public class Circle implements Shape {
 
     @Override
     public String toString() {
-        return "Окружность\r\nРадиус: " + getRadius();
+        return "Окружность Радиус: " + radius;
     }
 
     @Override
@@ -46,11 +46,13 @@ public class Circle implements Shape {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null) return false;
-
-        if (getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Circle circle = (Circle) o;
 
