@@ -27,13 +27,13 @@ public class Main {
 
         System.out.println("Компонента вектора 2 по индексу 2: " + vector2.getComponent(2));
 
-        System.out.println("Сумма вектора 1 и 2 без изменений: " + Vector.getVectorsSum(vector1, vector2));
+        System.out.println("Сумма вектора 1 и 2 без изменений: " + Vector.getSum(vector1, vector2));
         System.out.println("Вектор 1: " + vector1);
 
         System.out.println("Сумма вектора 1 и 2 с изменением: " + vector1.add(vector2));
         System.out.println("Вектор 1: " + vector1);
 
-        System.out.println("Разность вектора 3 и 4 без изменений: " + Vector.getVectorsDifference(vector3, vector4));
+        System.out.println("Разность вектора 3 и 4 без изменений: " + Vector.getDifference(vector3, vector4));
         System.out.println("Вектор 3: " + vector3);
 
         System.out.println("Разность вектора 3 и 4 с изменением: " + vector3.subtract(vector4));
@@ -43,6 +43,6 @@ public class Main {
 
         System.out.println("Разворот вектора 2: " + vector2.reverse());
 
-        System.out.println("Скалярное произведение векторов 3 и 4: " + Vector.getVectorsProduct(vector3, vector4));
+        System.out.println("Скалярное произведение векторов 3 и 4: " + Vector.getScalarProduct(vector3, vector4));
     }
 }
