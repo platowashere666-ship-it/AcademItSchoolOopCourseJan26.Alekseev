@@ -7,7 +7,7 @@ public class Vector {
 
     public Vector(int size) {
         if (size <= 0) {
-            throw new IllegalArgumentException("Размерность вектора n должна быть > 0, размерность: " + size);
+            throw new IllegalArgumentException("Размерность вектора должна быть > 0, размерность: " + size);
         }
 
         components = new double[size];
@@ -31,7 +31,7 @@ public class Vector {
 
     public Vector(int size, double[] components) {
         if (size <= 0) {
-            throw new IllegalArgumentException("Размерность вектора n должна быть > 0, размерность: " + size);
+            throw new IllegalArgumentException("Размерность вектора должна быть > 0, размерность: " + size);
         }
 
         if (components == null) {
@@ -47,16 +47,16 @@ public class Vector {
 
     @Override
     public String toString() {
+        int lastComponentIndex = components.length - 1;
+
         StringBuilder sb = new StringBuilder();
         sb.append('{');
 
-        for (int i = 0; i < components.length - 1; ++i) {
-            sb.append(components[i]);
-            sb.append(", ");
+        for (int i = 0; i < lastComponentIndex; ++i) {
+            sb.append(components[i]).append(", ");
         }
 
-        sb.append(components[components.length - 1]);
-        sb.append('}');
+        sb.append(components[lastComponentIndex]).append('}');
 
         return sb.toString();
     }
@@ -152,16 +152,14 @@ public class Vector {
 
     public static Vector getSum(Vector vector1, Vector vector2) {
         Vector vector1Copy = new Vector(vector1);
-        Vector vector2Copy = new Vector(vector2);
 
-        return vector1Copy.add(vector2Copy);
+        return vector1Copy.add(vector2);
     }
 
     public static Vector getDifference(Vector vector1, Vector vector2) {
         Vector vector1Copy = new Vector(vector1);
-        Vector vector2Copy = new Vector(vector2);
 
-        return vector1Copy.subtract(vector2Copy);
+        return vector1Copy.subtract(vector2);
     }
 
     public static double getScalarProduct(Vector vector1, Vector vector2) {
