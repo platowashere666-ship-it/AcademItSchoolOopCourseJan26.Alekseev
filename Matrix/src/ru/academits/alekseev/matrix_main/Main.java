@@ -7,9 +7,9 @@ public class Main {
     public static void main(String[] args) {
         Matrix matrix1 = new Matrix(4, 4);
 
-        double[][] matrix2Components = {{3.5, 4.2}, {7.6, 9}};
+        double[][] matrix2Rows = {{3.5, 4.2}, {7.6, 9}};
 
-        Matrix matrix2 = new Matrix(matrix2Components);
+        Matrix matrix2 = new Matrix(matrix2Rows);
 
         Matrix matrix3 = new Matrix(matrix1);
 
@@ -33,9 +33,9 @@ public class Main {
 
         System.out.println("Кол-во столбцов матрицы 2: " + matrix2.getColumnsCount());
 
-        double[] rowComponents = {2.2, 3.3, 4.4, 5.5};
-        Vector row = new Vector(rowComponents);
-        matrix1.setRow(0, row);
+        double[] row = {2.2, 3.3, 4.4, 5.5};
+        Vector vector = new Vector(row);
+        matrix1.setRow(0, vector);
 
         System.out.println("Установим строку в матрицу 1 по индексу 0: " + matrix1);
 
@@ -43,15 +43,15 @@ public class Main {
 
         System.out.println("Столбец по индексу 0 из матрицы 1: " + matrix1.getColumn(0));
 
-        matrix1.setRow(1, row);
-        matrix1.setRow(2, row);
-        matrix1.setRow(3, row);
+        matrix1.setRow(1, vector);
+        matrix1.setRow(2, vector);
+        matrix1.setRow(3, vector);
         System.out.println("Транспонируем матрицу 1: " + matrix1.transpose());
 
         System.out.println("Умножим матрицу 1 на 5: " + matrix1.multiply(5));
 
-        double[] vectorComponents = {3.3, 4.4, 5, 10};
-        Vector vectorToMultiply = new Vector(vectorComponents);
+        double[] row2 = {3.3, 4.4, 5, 10};
+        Vector vectorToMultiply = new Vector(row2);
 
         System.out.println("Умножим матрицу 1 на вектор: " + matrix1.multiplyByVector(vectorToMultiply));
 
