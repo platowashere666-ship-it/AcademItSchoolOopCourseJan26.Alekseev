@@ -76,18 +76,17 @@ public class Matrix {
             if (vectors[i].getSize() == maxVectorSize) {
                 rows[i] = new Vector(vectors[i]);
             } else {
-                Vector extendedVector = new Vector(maxVectorSize);
-                extendedVector.add(vectors[i]);
-                rows[i] = new Vector(extendedVector);
+                rows[i] = new Vector(maxVectorSize);
+                rows[i].add(vectors[i]);
             }
         }
     }
 
-    private void checkSize(Matrix matrix) {
-        if (rows.length != matrix.rows.length || getColumnsCount() != matrix.getColumnsCount()) {
+    private static void checkSize(Matrix matrix1, Matrix matrix2) {
+        if (matrix1.rows.length != matrix2.rows.length || matrix1.getColumnsCount() != matrix2.getColumnsCount()) {
             throw new IllegalArgumentException("Матрицы должны быть одинаковой размерности." +
-                    "Размеры первой матрицы: " + rows.length + ", " + getColumnsCount() +
-                    ". Размеры второй матрицы: " + matrix.rows.length + ", " + matrix.getColumnsCount());
+                    "Размеры первой матрицы: " + matrix1.rows.length + ", " + matrix1.getColumnsCount() +
+                    ". Размеры второй матрицы: " + matrix2.rows.length + ", " + matrix2.getColumnsCount());
         }
     }
 
@@ -142,16 +141,12 @@ public class Matrix {
     }
 
     public Matrix transpose() {
-        int columnCount = getColumnsCount();
+        int columnsCount = getColumnsCount();
 
-        Vector[] transposedRows = new Vector[columnCount];
+        Vector[] transposedRows = new Vector[columnsCount];
 
-        for (int i = 0; i < columnCount; ++i) {
-            transposedRows[i] = new Vector(rows.length);
-
-            for (int j = 0; j < rows.length; ++j) {
-                transposedRows[i].setComponent(j, rows[j].getComponent(i));
-            }
+        for (int i = 0; i < columnsCount; ++i) {
+            transposedRows[i] = new Vector(getColumn(i));
         }
 
         rows = transposedRows;
@@ -160,8 +155,8 @@ public class Matrix {
     }
 
     public Matrix multiply(double scalar) {
-        for (Vector component : rows) {
-            component.multiply(scalar);
+        for (Vector row : rows) {
+            row.multiply(scalar);
         }
 
         return this;
@@ -247,7 +242,7 @@ public class Matrix {
 
         Matrix matrix = (Matrix) o;
 
-        return Arrays.equals(this.rows, matrix.rows);
+        return Arrays.equals(rows, matrix.rows);
     }
 
     @Override
@@ -268,10 +263,10 @@ public class Matrix {
                     ". Размерность вектора: " + vector.getSize());
         }
 
-        double[] multiplicationResult = new double[this.rows.length];
+        double[] multiplicationResult = new double[rows.length];
 
         for (int i = 0; i < multiplicationResult.length; ++i) {
-            multiplicationResult[i] = Vector.getScalarProduct(this.rows[i], vector);
+            multiplicationResult[i] = Vector.getScalarProduct(rows[i], vector);
         }
 
         return new Vector(multiplicationResult);
@@ -282,7 +277,7 @@ public class Matrix {
             throw new NullPointerException("Матрица не может быть null.");
         }
 
-        checkSize(matrix);
+        checkSize(this, matrix);
 
         for (int i = 0; i < rows.length; ++i) {
             rows[i].add(matrix.rows[i]);
@@ -296,7 +291,7 @@ public class Matrix {
             throw new NullPointerException("Матрица не может быть null.");
         }
 
-        checkSize(matrix);
+        checkSize(this, matrix);
 
         for (int i = 0; i < rows.length; ++i) {
             rows[i].subtract(matrix.rows[i]);
@@ -314,7 +309,7 @@ public class Matrix {
             throw new NullPointerException("Матрица 2 не может быть null.");
         }
 
-        matrix1.checkSize(matrix2);
+        checkSize(matrix1, matrix2);
 
         Matrix matrix1Copy = new Matrix(matrix1);
 
@@ -330,7 +325,7 @@ public class Matrix {
             throw new NullPointerException("Матрица 2 не может быть null.");
         }
 
-        matrix1.checkSize(matrix2);
+        checkSize(matrix1, matrix2);
 
         Matrix matrix1Copy = new Matrix(matrix1);
 
