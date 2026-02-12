@@ -146,7 +146,7 @@ public class Matrix {
         Vector[] transposedRows = new Vector[columnsCount];
 
         for (int i = 0; i < columnsCount; ++i) {
-            transposedRows[i] = new Vector(getColumn(i));
+            transposedRows[i] = getColumn(i);
         }
 
         rows = transposedRows;
