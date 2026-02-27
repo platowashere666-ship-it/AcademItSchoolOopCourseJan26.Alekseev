@@ -1,5 +1,8 @@
 package ru.academits.alekseev.list;
 
+import java.util.NoSuchElementException;
+import java.util.Objects;
+
 public class SinglyLinkedList<E> {
     private ListItem<E> head;
     private int count;
@@ -14,7 +17,15 @@ public class SinglyLinkedList<E> {
     public E getData(int index) {
         checkIndex(index);
 
+        if (index == 0) {
+            return getHeadData();
+        }
+
         return getItem(index).getData();
+    }
+
+    public E getHeadData() {
+        return head.getData();
     }
 
     public E setData(int index, E data) {
@@ -46,11 +57,7 @@ public class SinglyLinkedList<E> {
     }
 
     public boolean delete(E data) {
-        if (data == null) {
-            throw new NullPointerException("Операция невозможна - аргумент = null");
-        }
-
-        if (head.getData().equals(data)) {
+        if (Objects.equals(head.getData(), data)) {
             deleteFirst();
 
             return true;
@@ -60,7 +67,7 @@ public class SinglyLinkedList<E> {
         ListItem<E> currentItem = head.getNext();
 
         while (currentItem != null) {
-            if (currentItem.getData().equals(data)) {
+            if (Objects.equals(currentItem.getData(), data)) {
                 previousItem.setNext(currentItem.getNext());
                 --count;
 
@@ -76,7 +83,7 @@ public class SinglyLinkedList<E> {
 
     public E deleteFirst() {
         if (head == null) {
-            throw new NullPointerException("Операция невозможна - лист пуст.");
+            throw new NoSuchElementException("Операция невозможна - лист пуст.");
         }
 
         E dataToDelete = head.getData();
