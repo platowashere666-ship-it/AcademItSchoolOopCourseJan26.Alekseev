@@ -1,31 +1,26 @@
 package ru.academits.alekseev.list;
 
-public class ListItem<T> {
-    private T data;
-    private ListItem<T> next;
+class ListItem<E> {
+    private E data;
+    private ListItem<E> next;
 
-    public ListItem(T data) {
+    public ListItem(E data) {
         this.data = data;
     }
 
-    public ListItem<T> getNext() {
+    public ListItem<E> getNext() {
         return next;
     }
 
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public void setNext(ListItem<T> next) {
+    public void setNext(ListItem<E> next) {
         this.next = next;
     }
 
-    @Override
-    public String toString() {
-        return data.toString();
+    public E getData() {
+        return data;
+    }
+
+    public void setData(E data) {
+        this.data = data;
     }
 }
