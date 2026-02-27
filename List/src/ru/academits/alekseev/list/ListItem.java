@@ -8,6 +8,11 @@ class ListItem<E> {
         this.data = data;
     }
 
+    public ListItem(E data, ListItem<E> next) {
+        this.data = data;
+        this.next = next;
+    }
+
     public ListItem<E> getNext() {
         return next;
     }

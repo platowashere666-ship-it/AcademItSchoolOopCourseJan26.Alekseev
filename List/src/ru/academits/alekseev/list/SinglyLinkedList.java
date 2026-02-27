@@ -13,9 +13,8 @@ public class SinglyLinkedList<E> {
 
     public E getData(int index) {
         checkIndex(index);
-        ListItem<E> currentItem = getItem(index);
 
-        return currentItem.getData();
+        return getItem(index).getData();
     }
 
     public E setData(int index, E data) {
@@ -23,11 +22,11 @@ public class SinglyLinkedList<E> {
 
         ListItem<E> currentItem = getItem(index);
 
-        E changedData = currentItem.getData();
+        E oldData = currentItem.getData();
 
         currentItem.setData(data);
 
-        return changedData;
+        return oldData;
     }
 
     public E delete(int index) {
@@ -37,9 +36,9 @@ public class SinglyLinkedList<E> {
             return deleteFirst();
         }
 
-        ListItem<E> currentItem = getItem(index - 1);
-        ListItem<E> itemToDelete = currentItem.getNext();
-        currentItem.setNext(itemToDelete.getNext());
+        ListItem<E> previousItem = getItem(index - 1);
+        ListItem<E> itemToDelete = previousItem.getNext();
+        previousItem.setNext(itemToDelete.getNext());
 
         --count;
 
@@ -47,13 +46,12 @@ public class SinglyLinkedList<E> {
     }
 
     public boolean delete(E data) {
-        if (head == null) {
-            throw new NullPointerException("Операция невозможна - лист пуст.");
+        if (data == null) {
+            throw new NullPointerException("Операция невозможна - аргумент = null");
         }
 
         if (head.getData().equals(data)) {
-            head = head.getNext();
-            --count;
+            deleteFirst();
 
             return true;
         }
@@ -77,6 +75,10 @@ public class SinglyLinkedList<E> {
     }
 
     public E deleteFirst() {
+        if (head == null) {
+            throw new NullPointerException("Операция невозможна - лист пуст.");
+        }
+
         E dataToDelete = head.getData();
         head = head.getNext();
         --count;
@@ -98,12 +100,10 @@ public class SinglyLinkedList<E> {
             return;
         }
 
-        ListItem<E> currentItem = getItem(index - 1);
-        ListItem<E> newItem = new ListItem<>(data);
+        ListItem<E> previousItem = getItem(index - 1);
+        ListItem<E> newItem = new ListItem<>(data, previousItem.getNext());
 
-        newItem.setNext(currentItem.getNext());
-        currentItem.setNext(newItem);
-
+        previousItem.setNext(newItem);
         ++count;
     }
 
@@ -159,15 +159,9 @@ public class SinglyLinkedList<E> {
     }
 
     private ListItem<E> getItem(int index) {
-        checkIndex(index);
-
         ListItem<E> currentItem = head;
 
         for (int i = 0; i < index; ++i) {
-            if (currentItem == null) {
-                throw new NullPointerException("Невозможно выполнить операцию - в списке присутствует null.");
-            }
-
             currentItem = currentItem.getNext();
         }
 
