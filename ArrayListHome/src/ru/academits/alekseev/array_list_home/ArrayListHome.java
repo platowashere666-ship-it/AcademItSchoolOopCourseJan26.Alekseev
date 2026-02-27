@@ -17,7 +17,7 @@ public class ArrayListHome {
 
             System.out.println("Список строк из файла: " + lines);
         } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Ошибка: " + e.getMessage());
         }
 
         ArrayList<Integer> numbers = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
