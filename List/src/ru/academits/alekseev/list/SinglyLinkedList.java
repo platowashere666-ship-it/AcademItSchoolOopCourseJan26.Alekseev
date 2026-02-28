@@ -18,13 +18,17 @@ public class SinglyLinkedList<E> {
         checkIndex(index);
 
         if (index == 0) {
-            return getHeadData();
+            return head.getData();
         }
 
         return getItem(index).getData();
     }
 
-    public E getHeadData() {
+    public E getFirst() {
+        if (head == null) {
+            throw new NoSuchElementException("Операция невозможна - список пуст.");
+        }
+
         return head.getData();
     }
 
@@ -57,6 +61,10 @@ public class SinglyLinkedList<E> {
     }
 
     public boolean delete(E data) {
+        if (head == null) {
+            return false;
+        }
+
         if (Objects.equals(head.getData(), data)) {
             deleteFirst();
 
@@ -83,7 +91,7 @@ public class SinglyLinkedList<E> {
 
     public E deleteFirst() {
         if (head == null) {
-            throw new NoSuchElementException("Операция невозможна - лист пуст.");
+            throw new NoSuchElementException("Операция невозможна - список пуст.");
         }
 
         E dataToDelete = head.getData();

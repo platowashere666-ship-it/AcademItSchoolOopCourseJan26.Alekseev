@@ -39,7 +39,7 @@ public class Main {
         list.reverse();
         System.out.println("Развернули список: " + list);
 
-        System.out.println("Первый элемент списка: " + list.getData(0));
+        System.out.println("Первый элемент списка: " + list.getFirst());
         System.out.println("Размер списка: " + list.getCount());
         System.out.println("Вывели значение по индексу 2: " + list.getData(2));
 
