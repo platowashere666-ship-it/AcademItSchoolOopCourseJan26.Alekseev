@@ -17,10 +17,6 @@ public class SinglyLinkedList<E> {
     public E getData(int index) {
         checkIndex(index);
 
-        if (index == 0) {
-            return head.getData();
-        }
-
         return getItem(index).getData();
     }
 
