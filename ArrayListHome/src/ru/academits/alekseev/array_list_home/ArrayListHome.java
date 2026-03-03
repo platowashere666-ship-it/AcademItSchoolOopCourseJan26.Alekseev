@@ -1,23 +1,24 @@
 package ru.academits.alekseev.array_list_home;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class ArrayListHome {
     public static void main(String[] args) {
-        try (Scanner scanner = new Scanner(new File("ArrayListHome/input.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("ArrayListHome/input.txt"))) {
             ArrayList<String> lines = new ArrayList<>();
+            String line;
 
-            while (scanner.hasNextLine()) {
-                lines.add(scanner.nextLine());
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
             }
 
             System.out.println("Список строк из файла: " + lines);
         } catch (FileNotFoundException e) {
             System.out.println("Ошибка: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Ошибка при чтении файла: " + e.getMessage());
         }
 
         ArrayList<Integer> numbers = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8));
