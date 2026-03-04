@@ -32,7 +32,7 @@ public class ArrayListHome {
         System.out.println("Список нечётных чисел: " + numbers);
 
         ArrayList<Integer> numbers2 = new ArrayList<>(Arrays.asList(1, 5, 2, 1, 3, 5));
-        ArrayList<Integer> uniqueNumbers = new ArrayList<>();
+        ArrayList<Integer> uniqueNumbers = new ArrayList<>(numbers2.size());
 
         for (Integer number : numbers2) {
             if (!uniqueNumbers.contains(number)) {
