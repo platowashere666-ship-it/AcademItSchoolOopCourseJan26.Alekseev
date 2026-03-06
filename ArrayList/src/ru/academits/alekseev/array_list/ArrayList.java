@@ -184,9 +184,7 @@ public class ArrayList<E> implements List<E> {
             return;
         }
 
-        for (int i = 0; i < size; ++i) {
-            items[i] = null;
-        }
+        Arrays.fill(items, null);
 
         size = 0;
         ++modCount;
