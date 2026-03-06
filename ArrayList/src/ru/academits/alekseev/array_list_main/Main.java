@@ -11,6 +11,9 @@ public class Main {
         list1.add(10);
         System.out.println("Создали список: " + list1);
 
+        list1.trimToSize();
+        System.out.println("Обрезали массив списка по размеру: " + list1);
+
         ArrayList<Integer> list2 = new ArrayList<>(list1.size());
 
         list2.addAll(list1);
