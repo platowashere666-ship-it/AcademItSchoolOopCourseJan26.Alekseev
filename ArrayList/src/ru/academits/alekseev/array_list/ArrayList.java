@@ -88,7 +88,7 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public boolean add(E item) {
-        ensureCapacity(size + 1);
+        ensureCapacity(size + 10);
 
         items[size] = item;
         ++size;
@@ -211,7 +211,7 @@ public class ArrayList<E> implements List<E> {
     public void add(int index, E element) {
         checkIndexForAddition(index);
 
-        ensureCapacity(size * 2);
+        ensureCapacity(size + 10);
         System.arraycopy(items, index, items, index + 1, size - index);
 
         items[index] = element;
