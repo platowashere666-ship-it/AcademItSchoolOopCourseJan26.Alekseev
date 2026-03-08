@@ -88,7 +88,7 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public boolean add(E item) {
-        ensureCapacity(size + 10);
+        ensureCapacity(size * 2);
 
         items[size] = item;
         ++size;
@@ -99,10 +99,10 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public boolean remove(Object o) {
-        int objectIndex = indexOf(o);
+        int index = indexOf(o);
 
-        if (objectIndex != -1) {
-            remove(objectIndex);
+        if (index != -1) {
+            remove(index);
 
             return true;
         }
@@ -180,10 +180,11 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public void clear() {
-        if (isEmpty()) {
+        if (size == 0) {
             return;
         }
 
+        trimToSize();
         Arrays.fill(items, null);
 
         size = 0;
@@ -211,7 +212,7 @@ public class ArrayList<E> implements List<E> {
     public void add(int index, E element) {
         checkIndexForAddition(index);
 
-        ensureCapacity(size + 10);
+        ensureCapacity(size * 2);
         System.arraycopy(items, index, items, index + 1, size - index);
 
         items[index] = element;
@@ -280,6 +281,10 @@ public class ArrayList<E> implements List<E> {
     }
 
     public void trimToSize() {
+        if (size == 0 || size == items.length) {
+            return;
+        }
+
         items = Arrays.copyOf(items, size);
     }
 
@@ -297,7 +302,21 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public String toString() {
-        return Arrays.toString(items);
+        if (items == null) {
+            return "[]";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        int lastItemIndex = items.length - 1;
+
+        for (int i = 0; i < lastItemIndex; ++i) {
+            sb.append(items[i]).append(", ");
+        }
+
+        sb.append(items[lastItemIndex]).append(']');
+
+        return sb.toString();
     }
 
     @Override
@@ -310,10 +329,21 @@ public class ArrayList<E> implements List<E> {
             return false;
         }
 
-        //noinspection unchecked
-        ArrayList<E> list = (ArrayList<E>) o;
+        ArrayList<?> list = (ArrayList<?>) o;
 
-        return size == list.size && Arrays.equals(items, list.items);
+        if (size != list.size) {
+            return false;
+        }
+
+        if (items == null && list.items == null) {
+            return true;
+        }
+
+        if (items == null || list.items == null) {
+            return false;
+        }
+
+        return Arrays.equals(items, list.items);
     }
 
     @Override
@@ -321,8 +351,8 @@ public class ArrayList<E> implements List<E> {
         final int prime = 37;
         int hash = 1;
 
-        hash += hash * prime + size;
-        hash += hash * prime + Arrays.hashCode(items);
+        hash = hash * prime + Integer.hashCode(size);
+        hash = hash * prime + Arrays.hashCode(items);
 
         return hash;
     }
