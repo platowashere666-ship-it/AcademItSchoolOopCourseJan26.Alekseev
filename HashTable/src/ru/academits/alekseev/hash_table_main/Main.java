@@ -4,18 +4,19 @@ import ru.academits.alekseev.hash_table.HashTable;
 
 public class Main {
     public static void main(String[] args) {
-        HashTable<Integer> table1 = new HashTable<>();
+        HashTable<Integer> hashTable1 = new HashTable<>();
 
-        table1.add(10);
-        table1.add(185);
-        table1.add(643);
-        System.out.println("Создали таблицу: " + table1);
+        hashTable1.add(10);
+        hashTable1.add(185);
+        hashTable1.add(643);
+        System.out.println("Создали хэш-таблицу: " + hashTable1);
 
-        HashTable<Integer> table2 = new HashTable<>(table1.size());
+        HashTable<Integer> hashTable2 = new HashTable<>(hashTable1.size());
 
-        table2.add(10);
-        table2.add(185);
-        table2.add(643);
-        System.out.println("Создали вторую таблицу: " + table2);
+        hashTable2.add(10);
+        hashTable2.add(185);
+        hashTable2.add(643);
+        System.out.println("Создали вторую хэш-таблицу: " + hashTable2);
     }
+
 }

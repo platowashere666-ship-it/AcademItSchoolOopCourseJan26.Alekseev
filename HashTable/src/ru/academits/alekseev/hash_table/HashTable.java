@@ -43,13 +43,14 @@ public class HashTable<E> implements Collection<E> {
     @Override
     public Iterator<E> iterator() {
         return new Iterator<>() {
+            private int currentListIndex;
             private int currentItemIndex = -1;
-            private int itemsPassed = 0;
+            private int itemsPassedCount;
             private final int initialModCount = modCount;
 
             @Override
             public boolean hasNext() {
-                return itemsPassed < size;
+                return itemsPassedCount < size;
             }
 
             @Override
@@ -62,17 +63,22 @@ public class HashTable<E> implements Collection<E> {
                     throw new NoSuchElementException("Операция невозможна. Хэш-таблица закончилась.");
                 }
 
-                ++itemsPassed;
+                while (currentListIndex < lists.length) {
+                    ArrayList<E> currentList = lists[currentListIndex];
 
-                for (ArrayList<E> list : lists) {
-                    if (list != null && !list.isEmpty()) {
+                    if (currentList != null && !currentList.isEmpty()) {
                         ++currentItemIndex;
 
-                        if (currentItemIndex < list.size()) {
-                            return list.get(currentItemIndex);
+                        if (currentItemIndex < currentList.size()) {
+                            ++itemsPassedCount;
+
+                            return currentList.get(currentItemIndex);
                         } else {
+                            ++currentListIndex;
                             currentItemIndex = -1;
                         }
+                    } else {
+                        ++currentListIndex;
                     }
                 }
 
@@ -251,23 +257,15 @@ public class HashTable<E> implements Collection<E> {
         StringBuilder sb = new StringBuilder();
         sb.append('{');
 
-        boolean isFirst = true;
+        int lastIndex = lists.length - 1;
 
-        for (ArrayList<E> list : lists) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sb.append(", ");
-            }
-
-            if (list != null && !list.isEmpty()) {
-                sb.append(list);
-            } else {
-                sb.append("[]");
+        for (int i = 0; i < lastIndex; ++i) {
+            if (lists[i] != null && !lists[i].isEmpty()) {
+                sb.append(lists[i]).append(", ");
             }
         }
 
-        sb.append('}');
+        sb.append(lists[lastIndex]).append('}');
 
         return sb.toString();
     }
