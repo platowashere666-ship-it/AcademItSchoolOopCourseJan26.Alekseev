@@ -6,10 +6,11 @@ public class ArrayList<E> implements List<E> {
     private int size;
     private E[] items;
     private int modCount;
+    private final int DEFAULT_CAPACITY = 10;
 
     public ArrayList() {
         //noinspection unchecked
-        items = (E[]) new Object[10];
+        items = (E[]) new Object[DEFAULT_CAPACITY];
     }
 
     public ArrayList(int capacity) {
@@ -88,7 +89,9 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public boolean add(E item) {
-        ensureCapacity(size * 2);
+        if (items.length == size) {
+            ensureCapacity(size == 0 ? DEFAULT_CAPACITY : items.length * 2);
+        }
 
         items[size] = item;
         ++size;
@@ -184,8 +187,9 @@ public class ArrayList<E> implements List<E> {
             return;
         }
 
-        trimToSize();
-        Arrays.fill(items, null);
+        for (int i = 0; i < size; ++i) {
+            items[i] = null;
+        }
 
         size = 0;
         ++modCount;
@@ -212,7 +216,10 @@ public class ArrayList<E> implements List<E> {
     public void add(int index, E element) {
         checkIndexForAddition(index);
 
-        ensureCapacity(size * 2);
+        if (items.length == size) {
+            ensureCapacity(size == 0 ? DEFAULT_CAPACITY : items.length * 2);
+        }
+
         System.arraycopy(items, index, items, index + 1, size - index);
 
         items[index] = element;
@@ -281,11 +288,14 @@ public class ArrayList<E> implements List<E> {
     }
 
     public void trimToSize() {
-        if (size == 0 || size == items.length) {
-            return;
+        if (items.length > size) {
+            if (size == 0) {
+                //noinspection unchecked
+                items = (E[]) new Object[DEFAULT_CAPACITY];
+            } else {
+                items = Arrays.copyOf(items, size);
+            }
         }
-
-        items = Arrays.copyOf(items, size);
     }
 
     private void checkIndex(int index) {
@@ -302,19 +312,20 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public String toString() {
-        if (items == null) {
+        if (size == 0) {
             return "[]";
         }
 
         StringBuilder sb = new StringBuilder();
         sb.append('[');
-        int lastItemIndex = items.length - 1;
 
-        for (int i = 0; i < lastItemIndex; ++i) {
+        int lastIndex = size - 1;
+
+        for (int i = 0; i < lastIndex; ++i) {
             sb.append(items[i]).append(", ");
         }
 
-        sb.append(items[lastItemIndex]).append(']');
+        sb.append(items[lastIndex]).append(']');
 
         return sb.toString();
     }
@@ -335,15 +346,13 @@ public class ArrayList<E> implements List<E> {
             return false;
         }
 
-        if (items == null && list.items == null) {
-            return true;
+        for (int i = 0; i < size; ++i) {
+            if (!Objects.equals(items[i], list.items[i])) {
+                return false;
+            }
         }
 
-        if (items == null || list.items == null) {
-            return false;
-        }
-
-        return Arrays.equals(items, list.items);
+        return true;
     }
 
     @Override
@@ -351,8 +360,11 @@ public class ArrayList<E> implements List<E> {
         final int prime = 37;
         int hash = 1;
 
-        hash = hash * prime + Integer.hashCode(size);
-        hash = hash * prime + Arrays.hashCode(items);
+        hash = hash * prime + size;
+
+        for (int i = 0; i < size; ++i) {
+            hash = prime * hash + (items[i] == null ? 0 : items[i].hashCode());
+        }
 
         return hash;
     }
