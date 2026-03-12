@@ -6,7 +6,8 @@ public class ArrayList<E> implements List<E> {
     private int size;
     private E[] items;
     private int modCount;
-    private final int DEFAULT_CAPACITY = 10;
+
+    private static final int DEFAULT_CAPACITY = 10;
 
     public ArrayList() {
         //noinspection unchecked
@@ -89,9 +90,7 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public boolean add(E item) {
-        if (items.length == size) {
-            ensureCapacity(size == 0 ? DEFAULT_CAPACITY : items.length * 2);
-        }
+        ensureCapacityForAddition();
 
         items[size] = item;
         ++size;
@@ -187,9 +186,7 @@ public class ArrayList<E> implements List<E> {
             return;
         }
 
-        for (int i = 0; i < size; ++i) {
-            items[i] = null;
-        }
+        Arrays.fill(items, 0, size, null);
 
         size = 0;
         ++modCount;
@@ -216,9 +213,7 @@ public class ArrayList<E> implements List<E> {
     public void add(int index, E element) {
         checkIndexForAddition(index);
 
-        if (items.length == size) {
-            ensureCapacity(size == 0 ? DEFAULT_CAPACITY : items.length * 2);
-        }
+        ensureCapacityForAddition();
 
         System.arraycopy(items, index, items, index + 1, size - index);
 
@@ -287,14 +282,16 @@ public class ArrayList<E> implements List<E> {
         }
     }
 
+    private void ensureCapacityForAddition() {
+        if (items.length == size) {
+            int newCapacity = size == 0 ? DEFAULT_CAPACITY : items.length * 2;
+            ensureCapacity(newCapacity);
+        }
+    }
+
     public void trimToSize() {
         if (items.length > size) {
-            if (size == 0) {
-                //noinspection unchecked
-                items = (E[]) new Object[DEFAULT_CAPACITY];
-            } else {
-                items = Arrays.copyOf(items, size);
-            }
+            items = Arrays.copyOf(items, size);
         }
     }
 
