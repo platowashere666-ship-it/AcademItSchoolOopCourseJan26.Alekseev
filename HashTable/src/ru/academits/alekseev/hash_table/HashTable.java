@@ -66,22 +66,22 @@ public class HashTable<E> implements Collection<E> {
                 while (currentListIndex < lists.length) {
                     ArrayList<E> currentList = lists[currentListIndex];
 
-                    if (currentList != null && !currentList.isEmpty()) {
-                        ++currentItemIndex;
-
-                        if (currentItemIndex < currentList.size()) {
-                            ++itemsPassedCount;
-
-                            return currentList.get(currentItemIndex);
-                        }
-
+                    if (currentList == null || currentList.isEmpty()) {
                         ++currentListIndex;
-                        currentItemIndex = -1;
 
                         continue;
                     }
 
+                    ++currentItemIndex;
+
+                    if (currentItemIndex < currentList.size()) {
+                        ++itemsPassedCount;
+
+                        return currentList.get(currentItemIndex);
+                    }
+
                     ++currentListIndex;
+                    currentItemIndex = -1;
                 }
 
                 throw new NoSuchElementException("Операция невозможна. Хэш-таблица закончилась.");
@@ -259,21 +259,16 @@ public class HashTable<E> implements Collection<E> {
         StringBuilder sb = new StringBuilder();
         sb.append('{');
 
-        int lastIndex = lists.length - 1;
-
-        for (int i = 0; i < lastIndex; ++i) {
-            if (lists[i] != null) {
-                sb.append(lists[i]).append(", ");
+        for (ArrayList<E> list : lists) {
+            if (list != null) {
+                sb.append(list).append(", ");
             }
         }
 
-        if (lists[lastIndex] != null) {
-            sb.append(lists[lastIndex]).append('}');
-
-            return sb.toString();
+        if (sb.length() > 1) {
+            sb.delete(sb.length() - 2, sb.length());
         }
 
-        sb.delete(sb.length() - 2, sb.length());
         sb.append('}');
 
         return sb.toString();
