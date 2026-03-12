@@ -73,13 +73,15 @@ public class HashTable<E> implements Collection<E> {
                             ++itemsPassedCount;
 
                             return currentList.get(currentItemIndex);
-                        } else {
-                            ++currentListIndex;
-                            currentItemIndex = -1;
                         }
-                    } else {
+
                         ++currentListIndex;
+                        currentItemIndex = -1;
+
+                        continue;
                     }
+
+                    ++currentListIndex;
                 }
 
                 throw new NoSuchElementException("Операция невозможна. Хэш-таблица закончилась.");
@@ -250,7 +252,7 @@ public class HashTable<E> implements Collection<E> {
 
     @Override
     public String toString() {
-        if (isEmpty()) {
+        if (size == 0) {
             return "{}";
         }
 
@@ -260,12 +262,19 @@ public class HashTable<E> implements Collection<E> {
         int lastIndex = lists.length - 1;
 
         for (int i = 0; i < lastIndex; ++i) {
-            if (lists[i] != null && !lists[i].isEmpty()) {
+            if (lists[i] != null) {
                 sb.append(lists[i]).append(", ");
             }
         }
 
-        sb.append(lists[lastIndex]).append('}');
+        if (lists[lastIndex] != null) {
+            sb.append(lists[lastIndex]).append('}');
+
+            return sb.toString();
+        }
+
+        sb.delete(sb.length() - 2, sb.length());
+        sb.append('}');
 
         return sb.toString();
     }

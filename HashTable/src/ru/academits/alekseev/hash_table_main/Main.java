@@ -18,5 +18,4 @@ public class Main {
         hashTable2.add(643);
         System.out.println("Создали вторую хэш-таблицу: " + hashTable2);
     }
-
 }
