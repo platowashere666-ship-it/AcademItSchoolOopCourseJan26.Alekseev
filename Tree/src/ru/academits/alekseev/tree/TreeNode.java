@@ -1,6 +1,6 @@
 package ru.academits.alekseev.tree;
 
-class TreeNode<E extends Comparable<E>> {
+class TreeNode<E> {
     private TreeNode<E> right;
     private TreeNode<E> left;
     private final E data;
