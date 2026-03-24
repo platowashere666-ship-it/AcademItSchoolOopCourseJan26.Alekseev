@@ -1,4 +1,4 @@
-package ru.academits.alekseev.person;
+package ru.academits.alekseev.lambdas.person;
 
 import java.util.Comparator;
 import java.util.List;
@@ -42,13 +42,13 @@ public class Main {
             System.out.println("Их средний возраст: " + minorsAverageAge);
         }
 
-        Map<String, Double> averageAgeByName = persons.stream()
+        Map<String, Double> averageAgesByNames = persons.stream()
                 .collect(Collectors.groupingBy(
                         Person::getName,
                         Collectors.averagingInt(Person::getAge)
                 ));
 
-        System.out.println("Группировка людей по имени и среднему возрасту: " + averageAgeByName);
+        System.out.println("Группировка людей по имени и среднему возрасту: " + averageAgesByNames);
 
         System.out.println("Люди возрастом от 20 до 45:");
         persons.stream()

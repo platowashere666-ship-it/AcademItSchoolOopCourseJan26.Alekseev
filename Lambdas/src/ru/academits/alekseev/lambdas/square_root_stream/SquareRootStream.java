@@ -1,4 +1,4 @@
-package ru.academits.alekseev.square_root_stream;
+package ru.academits.alekseev.lambdas.square_root_stream;
 
 import java.util.Scanner;
 import java.util.stream.DoubleStream;

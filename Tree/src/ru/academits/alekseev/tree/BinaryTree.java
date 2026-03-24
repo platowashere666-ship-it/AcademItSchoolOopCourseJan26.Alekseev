@@ -3,15 +3,15 @@ package ru.academits.alekseev.tree;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class Tree<E> {
+public class BinaryTree<E> {
     private TreeNode<E> root;
     private int size;
-    private Comparator<E> comparator;
+    private Comparator<? super E> comparator;
 
-    public Tree() {
+    public BinaryTree() {
     }
 
-    public Tree(Comparator<E> comparator) {
+    public BinaryTree(Comparator<? super E> comparator) {
         this.comparator = comparator;
     }
 
@@ -24,8 +24,12 @@ public class Tree<E> {
             return 0;
         }
 
-        if (data1 == null || data2 == null) {
-            return data1 == null ? -1 : 1;
+        if (data1 == null) {
+            return -1;
+        }
+
+        if (data2 == null) {
+            return 1;
         }
 
         if (!(data1 instanceof Comparable)) {
@@ -49,13 +53,9 @@ public class Tree<E> {
         TreeNode<E> currentNode = root;
 
         while (true) {
-            int compareResult = compare(data, currentNode.getData());
+            int comparisonResult = compare(data, currentNode.getData());
 
-            if (compareResult == 0) {
-                return false;
-            }
-
-            if (compareResult < 0) {
+            if (comparisonResult < 0) {
                 if (currentNode.getLeft() == null) {
                     currentNode.setLeft(newNode);
                     ++size;
@@ -85,13 +85,13 @@ public class Tree<E> {
         TreeNode<E> currentNode = root;
 
         while (currentNode != null) {
-            int compareResult = compare(data, currentNode.getData());
+            int comparisonResult = compare(data, currentNode.getData());
 
-            if (compareResult == 0) {
+            if (comparisonResult == 0) {
                 return true;
             }
 
-            if (compareResult < 0) {
+            if (comparisonResult < 0) {
                 currentNode = currentNode.getLeft();
             } else {
                 currentNode = currentNode.getRight();
@@ -101,29 +101,36 @@ public class Tree<E> {
         return false;
     }
 
+    private void replaceChild(TreeNode<E> parentNode, TreeNode<E> replacementNode, boolean isLeftChild) {
+        if (parentNode == null) {
+            root = replacementNode;
+        } else if (isLeftChild) {
+            parentNode.setLeft(replacementNode);
+        } else {
+            parentNode.setRight(replacementNode);
+        }
+    }
+
     public boolean remove(E data) {
         if (root == null) {
             return false;
         }
 
-        TreeNode<E> rootParent = new TreeNode<>(null);
-        rootParent.setLeft(root);
-
         TreeNode<E> currentNode = root;
-        TreeNode<E> parentNode = rootParent;
+        TreeNode<E> parentNode = null;
 
-        boolean isLeftChild = true;
+        boolean isLeftChild = false;
 
         while (currentNode != null) {
-            int compareResult = compare(data, currentNode.getData());
+            int comparisonResult = compare(data, currentNode.getData());
 
-            if (compareResult == 0) {
+            if (comparisonResult == 0) {
                 break;
             }
 
             parentNode = currentNode;
 
-            if (compareResult < 0) {
+            if (comparisonResult < 0) {
                 isLeftChild = true;
                 currentNode = currentNode.getLeft();
             } else {
@@ -136,45 +143,27 @@ public class Tree<E> {
             return false;
         }
 
-        if (currentNode.getLeft() == null && currentNode.getRight() == null) {
-            if (isLeftChild) {
-                parentNode.setLeft(null);
-            } else {
-                parentNode.setRight(null);
-            }
-        } else if (currentNode.getLeft() == null || currentNode.getRight() == null) {
+        if (currentNode.getLeft() == null || currentNode.getRight() == null) {
             TreeNode<E> child = (currentNode.getLeft() != null) ? currentNode.getLeft() : currentNode.getRight();
-
-            if (isLeftChild) {
-                parentNode.setLeft(child);
-            } else {
-                parentNode.setRight(child);
-            }
+            replaceChild(parentNode, child, isLeftChild);
         } else {
-            TreeNode<E> minRightNode = currentNode.getRight();
-            TreeNode<E> minRightParent = currentNode;
+            TreeNode<E> minLeftNode = currentNode.getRight();
+            TreeNode<E> minLeftNodeParent = currentNode;
 
-            while (minRightNode.getLeft() != null) {
-                minRightParent = minRightNode;
-                minRightNode = minRightNode.getLeft();
+            while (minLeftNode.getLeft() != null) {
+                minLeftNodeParent = minLeftNode;
+                minLeftNode = minLeftNode.getLeft();
             }
 
-            if (currentNode.getRight() == minRightNode) {
-                minRightNode.setLeft(currentNode.getLeft());
-            } else {
-                minRightParent.setLeft(minRightNode.getRight());
-                minRightNode.setLeft(currentNode.getLeft());
-                minRightNode.setRight(currentNode.getRight());
+            if (minLeftNodeParent != currentNode) {
+                minLeftNodeParent.setLeft(minLeftNode.getRight());
+                minLeftNode.setRight(currentNode.getRight());
             }
 
-            if (isLeftChild) {
-                parentNode.setLeft(minRightNode);
-            } else {
-                parentNode.setRight(minRightNode);
-            }
+            minLeftNodeParent.setLeft(currentNode.getLeft());
+            replaceChild(parentNode, minLeftNode, isLeftChild);
         }
 
-        root = rootParent.getLeft();
         --size;
 
         return true;
@@ -185,7 +174,11 @@ public class Tree<E> {
     }
 
     public void traverseBreadthFirst(Consumer<E> consumer) {
-        if (root == null || consumer == null) {
+        if (consumer == null) {
+            throw new NullPointerException("Consumer не может быть null.");
+        }
+
+        if (root == null) {
             return;
         }
 
@@ -207,11 +200,15 @@ public class Tree<E> {
     }
 
     public void traverseDepthFirst(Consumer<E> consumer) {
-        if (root == null || consumer == null) {
+        if (consumer == null) {
+            throw new NullPointerException("Consumer не может быть null.");
+        }
+
+        if (root == null) {
             return;
         }
 
-        Deque<TreeNode<E>> stack = new ArrayDeque<>();
+        Deque<TreeNode<E>> stack = new LinkedList<>();
         stack.push(root);
 
         while (!stack.isEmpty()) {
@@ -229,7 +226,11 @@ public class Tree<E> {
     }
 
     public void traverseDepthFirstRecursive(Consumer<E> consumer) {
-        if (root == null || consumer == null) {
+        if (consumer == null) {
+            throw new NullPointerException("Consumer не может быть null.");
+        }
+
+        if (root == null) {
             return;
         }
 
@@ -252,9 +253,19 @@ public class Tree<E> {
             return "[]";
         }
 
-        ArrayList<E> nodes = new ArrayList<>();
-        traverseBreadthFirst(nodes::add);
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
 
-        return nodes.toString();
+        traverseBreadthFirst(x -> {
+            if (sb.length() > 1) {
+                sb.append(", ");
+            }
+
+            sb.append(x);
+        });
+
+        sb.append(']');
+
+        return sb.toString();
     }
 }

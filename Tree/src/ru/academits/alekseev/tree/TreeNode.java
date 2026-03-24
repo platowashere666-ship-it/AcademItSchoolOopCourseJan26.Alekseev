@@ -1,8 +1,8 @@
 package ru.academits.alekseev.tree;
 
 class TreeNode<E> {
-    private TreeNode<E> right;
     private TreeNode<E> left;
+    private TreeNode<E> right;
     private final E data;
 
     public TreeNode(E data) {
