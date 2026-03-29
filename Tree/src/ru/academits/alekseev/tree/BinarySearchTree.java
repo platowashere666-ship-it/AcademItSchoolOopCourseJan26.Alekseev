@@ -3,15 +3,15 @@ package ru.academits.alekseev.tree;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class BinaryTree<E> {
+public class BinarySearchTree<E> {
     private TreeNode<E> root;
     private int size;
     private Comparator<? super E> comparator;
 
-    public BinaryTree() {
+    public BinarySearchTree() {
     }
 
-    public BinaryTree(Comparator<? super E> comparator) {
+    public BinarySearchTree(Comparator<? super E> comparator) {
         this.comparator = comparator;
     }
 
@@ -174,9 +174,7 @@ public class BinaryTree<E> {
     }
 
     public void traverseBreadthFirst(Consumer<E> consumer) {
-        if (consumer == null) {
-            throw new NullPointerException("Consumer не может быть null.");
-        }
+        Objects.requireNonNull(consumer, "Consumer не может быть null.");
 
         if (root == null) {
             return;
@@ -200,9 +198,7 @@ public class BinaryTree<E> {
     }
 
     public void traverseDepthFirst(Consumer<E> consumer) {
-        if (consumer == null) {
-            throw new NullPointerException("Consumer не может быть null.");
-        }
+        Objects.requireNonNull(consumer, "Consumer не может быть null.");
 
         if (root == null) {
             return;
@@ -226,9 +222,7 @@ public class BinaryTree<E> {
     }
 
     public void traverseDepthFirstRecursive(Consumer<E> consumer) {
-        if (consumer == null) {
-            throw new NullPointerException("Consumer не может быть null.");
-        }
+        Objects.requireNonNull(consumer, "Consumer не может быть null.");
 
         if (root == null) {
             return;
@@ -256,14 +250,9 @@ public class BinaryTree<E> {
         StringBuilder sb = new StringBuilder();
         sb.append('[');
 
-        traverseBreadthFirst(x -> {
-            if (sb.length() > 1) {
-                sb.append(", ");
-            }
+        traverseBreadthFirst(x -> sb.append(x).append(", "));
 
-            sb.append(x);
-        });
-
+        sb.delete(sb.length() - 2, sb.length());
         sb.append(']');
 
         return sb.toString();
