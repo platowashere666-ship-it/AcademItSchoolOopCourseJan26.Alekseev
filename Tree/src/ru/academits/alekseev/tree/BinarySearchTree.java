@@ -160,7 +160,7 @@ public class BinarySearchTree<E> {
                 minLeftNode.setRight(currentNode.getRight());
             }
 
-            minLeftNodeParent.setLeft(currentNode.getLeft());
+            minLeftNode.setLeft(currentNode.getLeft());
             replaceChild(parentNode, minLeftNode, isLeftChild);
         }
 
