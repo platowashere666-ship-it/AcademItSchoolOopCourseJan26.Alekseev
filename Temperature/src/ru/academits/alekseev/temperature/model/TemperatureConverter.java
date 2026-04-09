@@ -59,13 +59,18 @@ public class TemperatureConverter implements Converter {
     }
 
     @Override
-    public void setInputTemperatureScale(String inputTemperatureScale) {
-        this.inputTemperatureScale = inputTemperatureScale;
+    public String getInputTemperatureScale() {
+        return inputTemperatureScale;
     }
 
     @Override
-    public void setOutputTemperatureScale(String outputTemperatureScale) {
-        this.outputTemperatureScale = outputTemperatureScale;
+    public List<String> getAvailableTemperatureScales() {
+        return List.of("Цельсий", "Фаренгейт", "Кельвин");
+    }
+
+    @Override
+    public void setInputTemperatureScale(String inputTemperatureScale) {
+        this.inputTemperatureScale = inputTemperatureScale;
     }
 
     @Override
@@ -74,14 +79,21 @@ public class TemperatureConverter implements Converter {
     }
 
     @Override
+    public void setOutputTemperatureScale(String outputTemperatureScale) {
+        this.outputTemperatureScale = outputTemperatureScale;
+    }
+
+    @Override
     public double getOutputTemperature() {
         if (outputTemperatureScale.equals("Цельсий")) {
             return celsiusTemperature;
-        } else if (outputTemperatureScale.equals("Фаренгейт")) {
-            return fahrenheitTemperature;
-        } else {
-            return kelvinTemperature;
         }
+
+        if (outputTemperatureScale.equals("Фаренгейт")) {
+            return fahrenheitTemperature;
+        }
+
+        return kelvinTemperature;
     }
 
     @Override

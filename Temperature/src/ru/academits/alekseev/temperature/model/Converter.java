@@ -1,5 +1,7 @@
 package ru.academits.alekseev.temperature.model;
 
+import java.util.List;
+
 public interface Converter {
     void convertToCelsius(double inputTemperature);
 
@@ -7,11 +9,15 @@ public interface Converter {
 
     void convertToKelvin(double inputTemperature);
 
+    List<String> getAvailableTemperatureScales();
+
+    String getInputTemperatureScale();
+
     void setInputTemperatureScale(String inputTemperatureScale);
 
-    void setOutputTemperatureScale(String outputTemperatureScale);
-
     String getOutputTemperatureScale();
+
+    void setOutputTemperatureScale(String outputTemperatureScale);
 
     double getOutputTemperature();
 

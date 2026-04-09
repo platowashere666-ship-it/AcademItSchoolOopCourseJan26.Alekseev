@@ -3,6 +3,8 @@ package ru.academits.alekseev.temperature.controller;
 import ru.academits.alekseev.temperature.model.Converter;
 import ru.academits.alekseev.temperature.view.View;
 
+import java.util.List;
+
 public class Controller {
     private final Converter converter;
     private final View view;
@@ -27,29 +29,37 @@ public class Controller {
         view.start();
     }
 
-    public void setInputTemperatureScale(String inputTemperatureScale) {
-        converter.setInputTemperatureScale(inputTemperatureScale);
+    public List<String> getAvailableTemperatureScales() {
+        return converter.getAvailableTemperatureScales();
     }
 
-    public void setOutputTemperatureScale(String outputTemperatureScale) {
-        converter.setOutputTemperatureScale(outputTemperatureScale);
+    public String getInputTemperatureScale() {
+        return converter.getInputTemperatureScale();
+    }
+
+    public void setInputTemperatureScale(String inputTemperatureScale) {
+        converter.setInputTemperatureScale(inputTemperatureScale);
     }
 
     public String getOutputTemperatureScale() {
         return converter.getOutputTemperatureScale();
     }
 
-    public void convertTemperature(double InputTemperature, String outputTemperatureScale) {
+    public void setOutputTemperatureScale(String outputTemperatureScale) {
+        converter.setOutputTemperatureScale(outputTemperatureScale);
+    }
+
+    public void convertTemperature(double inputTemperature, String outputTemperatureScale) {
         if (outputTemperatureScale == null) {
-            throw new NullPointerException("Выберите температурную шкалу результата.");
+            throw new IllegalArgumentException("Выберите температурную шкалу результата.");
         }
 
         if (outputTemperatureScale.equals("Цельсий")) {
-            converter.convertToCelsius(InputTemperature);
+            converter.convertToCelsius(inputTemperature);
         } else if (outputTemperatureScale.equals("Фаренгейт")) {
-            converter.convertToFahrenheit(InputTemperature);
+            converter.convertToFahrenheit(inputTemperature);
         } else {
-            converter.convertToKelvin(InputTemperature);
+            converter.convertToKelvin(inputTemperature);
         }
     }
 }
