@@ -2,20 +2,25 @@ package ru.academits.alekseev.temperature.view;
 
 import ru.academits.alekseev.temperature.controller.Controller;
 import ru.academits.alekseev.temperature.model.Converter;
+import ru.academits.alekseev.temperature.model.Scale;
 
 import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class ConsoleView implements View {
+
     private final Converter converter;
     private Controller controller;
 
     public ConsoleView(Converter converter) {
-        if (converter == null) {
-            throw new IllegalArgumentException("Converter не может быть null.");
-        }
+        this.converter = Objects.requireNonNull(converter, "Converter не может быть null");
+    }
 
-        this.converter = converter;
+    @Override
+    public void setController(Controller controller) {
+        this.controller = Objects.requireNonNull(controller, "Controller не может быть null");
     }
 
     @Override
@@ -24,61 +29,53 @@ public class ConsoleView implements View {
 
         for (; ; ) {
             try {
-                System.out.println("Выберите температурную шкалу (1 - Цельсий, 2 - Фаренгейт, 3 - Кельвин):");
-                int inputTemperatureIndex = scanner.nextInt();
+                Scale inputScale = chooseScale(scanner, "Выберите входную температурную шкалу:");
+                controller.setInputScale(inputScale);
 
-                if (inputTemperatureIndex == 1) {
-                    controller.setInputTemperatureScale("Цельсий");
-                    System.out.println("Введите температуру в градусах Цельсия:");
-                } else if (inputTemperatureIndex == 2) {
-                    controller.setInputTemperatureScale("Фаренгейт");
-                    System.out.println("Введите температуру в градусах Фаренгейта:");
-                } else if (inputTemperatureIndex == 3) {
-                    controller.setInputTemperatureScale("Кельвин");
-                    System.out.println("Введите температуру в градусах Кельвина:");
-                } else {
-                    throw new InputMismatchException();
-                }
-
+                System.out.printf("Введите температуру в шкале %s: ", inputScale.getName());
                 double inputTemperature = scanner.nextDouble();
 
-                System.out.println("Выберите температурную шкалу результата (1 - Цельсий, 2 - Фаренгейт, 3 - Кельвин):");
-                int outputTemperatureIndex = scanner.nextInt();
+                Scale outputScale = chooseScale(scanner, "Выберите шкалу результата:");
+                controller.setOutputScale(outputScale);
 
-                if (outputTemperatureIndex == 1) {
-                    controller.setOutputTemperatureScale("Цельсий");
-                } else if (outputTemperatureIndex == 2) {
-                    controller.setOutputTemperatureScale("Фаренгейт");
-                } else if (outputTemperatureIndex == 3) {
-                    controller.setOutputTemperatureScale("Кельвин");
-                } else {
-                    throw new InputMismatchException();
-                }
-
-                controller.convertTemperature(inputTemperature, controller.getOutputTemperatureScale());
+                controller.convert(inputTemperature);
             } catch (InputMismatchException e) {
-                System.out.println("Разрешено вводить только числа (1, 2 и 3 - для выбора шкалы).");
-                scanner.next();
+                System.out.println("Ошибка: введите число.");
+                scanner.nextLine();
             }
         }
     }
 
-    @Override
-    public void setController(Controller controller) {
-        this.controller = controller;
+    private Scale chooseScale(Scanner scanner, String prompt) {
+        List<Scale> scales = controller.getAvailableScales();
+
+        System.out.println(prompt);
+
+        for (int i = 0; i < scales.size(); i++) {
+            System.out.printf("%d - %s%n", i + 1, scales.get(i).getName());
+        }
+
+        System.out.print("Ваш выбор: ");
+
+        int choice = scanner.nextInt();
+
+        if (choice < 1 || choice > scales.size()) {
+            throw new IllegalArgumentException("Неверный номер шкалы. Выберите число от 1 до " + scales.size());
+        }
+
+        return scales.get(choice - 1);
     }
 
     @Override
     public void temperatureConverted() {
-        double outputTemperature = converter.getOutputTemperature();
-        String outputTemperatureScale = controller.getOutputTemperatureScale();
+        double result = converter.getOutputTemperature();
+        Scale outputScale = controller.getOutputScale();
 
-        if (outputTemperatureScale.equals("Цельсий")) {
-            System.out.println("Температура в шкале Цельсия: " + outputTemperature);
-        } else if (outputTemperatureScale.equals("Фаренгейт")) {
-            System.out.println("Температура в шкале Фаренгейта: " + outputTemperature);
-        } else {
-            System.out.println("Температура в шкале Кельвина: " + outputTemperature);
+        if (outputScale == null) {
+            System.out.println("Результат: " + result);
+            return;
         }
+
+        System.out.printf("Результат: %.2f %s%n%n", result, outputScale.getName());
     }
 }

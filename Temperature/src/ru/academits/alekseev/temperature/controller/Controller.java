@@ -1,25 +1,19 @@
 package ru.academits.alekseev.temperature.controller;
 
 import ru.academits.alekseev.temperature.model.Converter;
+import ru.academits.alekseev.temperature.model.Scale;
 import ru.academits.alekseev.temperature.view.View;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Controller {
     private final Converter converter;
     private final View view;
 
     public Controller(Converter converter, View view) {
-        if (converter == null) {
-            throw new IllegalArgumentException("Converter не может быть null.");
-        }
-
-        if (view == null) {
-            throw new IllegalArgumentException("View не может быть null.");
-        }
-
-        this.converter = converter;
-        this.view = view;
+        this.converter = Objects.requireNonNull(converter, "Converter не может быть null.");
+        this.view = Objects.requireNonNull(view, "View не может быть null.");
 
         view.setController(this);
         converter.addConverterListener(view);
@@ -29,37 +23,23 @@ public class Controller {
         view.start();
     }
 
-    public List<String> getAvailableTemperatureScales() {
-        return converter.getAvailableTemperatureScales();
+    public List<Scale> getAvailableScales() {
+        return converter.getAvailableScales();
     }
 
-    public String getInputTemperatureScale() {
-        return converter.getInputTemperatureScale();
+    public void setInputScale(Scale inputTemperatureScale) {
+        converter.setInputScale(inputTemperatureScale);
     }
 
-    public void setInputTemperatureScale(String inputTemperatureScale) {
-        converter.setInputTemperatureScale(inputTemperatureScale);
+    public Scale getOutputScale() {
+        return converter.getOutputScale();
     }
 
-    public String getOutputTemperatureScale() {
-        return converter.getOutputTemperatureScale();
+    public void setOutputScale(Scale outputTemperatureScale) {
+        converter.setOutputScale(outputTemperatureScale);
     }
 
-    public void setOutputTemperatureScale(String outputTemperatureScale) {
-        converter.setOutputTemperatureScale(outputTemperatureScale);
-    }
-
-    public void convertTemperature(double inputTemperature, String outputTemperatureScale) {
-        if (outputTemperatureScale == null) {
-            throw new IllegalArgumentException("Выберите температурную шкалу результата.");
-        }
-
-        if (outputTemperatureScale.equals("Цельсий")) {
-            converter.convertToCelsius(inputTemperature);
-        } else if (outputTemperatureScale.equals("Фаренгейт")) {
-            converter.convertToFahrenheit(inputTemperature);
-        } else {
-            converter.convertToKelvin(inputTemperature);
-        }
+    public void convert(double inputTemperature) {
+        converter.convert(inputTemperature);
     }
 }

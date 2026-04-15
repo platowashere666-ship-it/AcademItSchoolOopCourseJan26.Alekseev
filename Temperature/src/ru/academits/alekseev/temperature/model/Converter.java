@@ -3,21 +3,15 @@ package ru.academits.alekseev.temperature.model;
 import java.util.List;
 
 public interface Converter {
-    void convertToCelsius(double inputTemperature);
+    void convert(double inputTemperature);
 
-    void convertToFahrenheit(double inputTemperature);
+    List<Scale> getAvailableScales();
 
-    void convertToKelvin(double inputTemperature);
+    void setInputScale(Scale inputScale);
 
-    List<String> getAvailableTemperatureScales();
+    Scale getOutputScale();
 
-    String getInputTemperatureScale();
-
-    void setInputTemperatureScale(String inputTemperatureScale);
-
-    String getOutputTemperatureScale();
-
-    void setOutputTemperatureScale(String outputTemperatureScale);
+    void setOutputScale(Scale outputScale);
 
     double getOutputTemperature();
 

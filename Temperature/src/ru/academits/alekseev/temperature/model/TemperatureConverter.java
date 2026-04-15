@@ -2,103 +2,66 @@ package ru.academits.alekseev.temperature.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TemperatureConverter implements Converter {
     private final List<ConverterListener> listeners = new ArrayList<>();
+    private final List<Scale> temperatureScales = new ArrayList<>();
 
-    private double celsiusTemperature;
-    private double fahrenheitTemperature;
-    private double kelvinTemperature;
+    private Scale inputScale;
+    private Scale outputScale;
 
-    private String inputTemperatureScale;
-    private String outputTemperatureScale;
+    private double outputTemperature;
+
+    public TemperatureConverter() {
+        addScale(new CelsiusScale());
+        addScale(new FahrenheitScale());
+        addScale(new KelvinScale());
+    }
 
     @Override
-    public void convertToCelsius(double inputTemperature) {
+    public void convert(double inputTemperature) {
         checkInputTemperatureScale();
+        checkOutputTemperatureScale();
 
-        if (inputTemperatureScale.equals("Цельсий")) {
-            celsiusTemperature = inputTemperature;
-        } else if (inputTemperatureScale.equals("Фаренгейт")) {
-            celsiusTemperature = (inputTemperature - 32) / 1.8;
-        } else {
-            celsiusTemperature = inputTemperature - 273.15;
-        }
+        double celsiusTemperature = inputScale.convertToDefaultScale(inputTemperature);
+        outputTemperature = outputScale.convert(celsiusTemperature);
 
         notifyListeners();
     }
 
     @Override
-    public void convertToFahrenheit(double inputTemperature) {
-        checkInputTemperatureScale();
-
-        if (inputTemperatureScale.equals("Фаренгейт")) {
-            fahrenheitTemperature = inputTemperature;
-        } else if (inputTemperatureScale.equals("Цельсий")) {
-            fahrenheitTemperature = (inputTemperature * 1.8) + 32;
-        } else {
-            fahrenheitTemperature = (inputTemperature - 273.15) * 1.8 + 32;
-        }
-
-        notifyListeners();
+    public List<Scale> getAvailableScales() {
+        return List.copyOf(temperatureScales);
     }
 
     @Override
-    public void convertToKelvin(double inputTemperature) {
-        checkInputTemperatureScale();
-
-        if (inputTemperatureScale.equals("Кельвин")) {
-            kelvinTemperature = inputTemperature;
-        } else if (inputTemperatureScale.equals("Цельсий")) {
-            kelvinTemperature = inputTemperature + 273.15;
-        } else {
-            kelvinTemperature = (inputTemperature - 32) * 0.56 + 273.15;
-        }
-
-        notifyListeners();
+    public void setInputScale(Scale inputScale) {
+        this.inputScale = Objects.requireNonNull(inputScale, "Входная шкала не может быть null.");
     }
 
     @Override
-    public String getInputTemperatureScale() {
-        return inputTemperatureScale;
+    public Scale getOutputScale() {
+        return outputScale;
     }
 
     @Override
-    public List<String> getAvailableTemperatureScales() {
-        return List.of("Цельсий", "Фаренгейт", "Кельвин");
-    }
-
-    @Override
-    public void setInputTemperatureScale(String inputTemperatureScale) {
-        this.inputTemperatureScale = inputTemperatureScale;
-    }
-
-    @Override
-    public String getOutputTemperatureScale() {
-        return outputTemperatureScale;
-    }
-
-    @Override
-    public void setOutputTemperatureScale(String outputTemperatureScale) {
-        this.outputTemperatureScale = outputTemperatureScale;
+    public void setOutputScale(Scale outputScale) {
+        this.outputScale = Objects.requireNonNull(outputScale, "Выходная шкала не может быть null.");
     }
 
     @Override
     public double getOutputTemperature() {
-        if (outputTemperatureScale.equals("Цельсий")) {
-            return celsiusTemperature;
-        }
+        return outputTemperature;
+    }
 
-        if (outputTemperatureScale.equals("Фаренгейт")) {
-            return fahrenheitTemperature;
-        }
-
-        return kelvinTemperature;
+    public void addScale(Scale scale) {
+        temperatureScales.add(Objects.requireNonNull(scale, "Шкала не может быть null."));
     }
 
     @Override
     public void addConverterListener(ConverterListener listener) {
-        listeners.add(listener);
+        listeners.add(Objects.requireNonNull(listener, "Listener не может быть null."));
     }
 
     private void notifyListeners() {
@@ -108,8 +71,14 @@ public class TemperatureConverter implements Converter {
     }
 
     private void checkInputTemperatureScale() {
-        if (inputTemperatureScale == null) {
+        if (inputScale == null) {
             throw new NullPointerException("Выберите исходную температурную шкалу.");
+        }
+    }
+
+    private void checkOutputTemperatureScale() {
+        if (outputScale == null) {
+            throw new NullPointerException("Выберите температурную шкалу результата.");
         }
     }
 }

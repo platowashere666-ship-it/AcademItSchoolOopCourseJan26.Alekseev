@@ -2,11 +2,13 @@ package ru.academits.alekseev.temperature.view;
 
 import ru.academits.alekseev.temperature.controller.Controller;
 import ru.academits.alekseev.temperature.model.Converter;
+import ru.academits.alekseev.temperature.model.Scale;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 
 public class DesktopView implements View {
     private final Converter converter;
@@ -14,18 +16,21 @@ public class DesktopView implements View {
     private JLabel outputTemperatureLabel;
 
     public DesktopView(Converter converter) {
-        if (converter == null) {
-            throw new NullPointerException("Converter не может быть null.");
-        }
+        this.converter = Objects.requireNonNull(converter, "Converter не может быть null.");
+    }
 
-        this.converter = converter;
+    @Override
+    public void setController(Controller controller) {
+        this.controller = Objects.requireNonNull(controller, "Controller не может быть null");
     }
 
     @Override
     public void start() {
         SwingUtilities.invokeLater(() -> {
-            controller.setInputTemperatureScale("Цельсий");
-            controller.setOutputTemperatureScale("Цельсий");
+            List<Scale> availableScales = controller.getAvailableScales();
+
+            controller.setInputScale(availableScales.getFirst());
+            controller.setOutputScale(availableScales.getFirst());
 
             JFrame frame = new JFrame("Температурный конвертер");
 
@@ -37,17 +42,18 @@ public class DesktopView implements View {
             JPanel panel = new JPanel();
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
             panel.setBackground(Color.LIGHT_GRAY);
+            panel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 
             Font labelFont = new Font(Font.SANS_SERIF, Font.BOLD, 16);
-            Border labelBorder = BorderFactory.createEmptyBorder(10, 40, 10, 40);
+            Border labelBorder = BorderFactory.createEmptyBorder(10, 0, 10, 0);
 
             JLabel chooseInputTemperatureScaleLabel = new JLabel("Выберите температурную шкалу:");
             chooseInputTemperatureScaleLabel.setFont(labelFont);
             chooseInputTemperatureScaleLabel.setBorder(labelBorder);
             panel.add(chooseInputTemperatureScaleLabel);
 
-            Font buttonFont = new Font(Font.SERIF, Font.BOLD, 14);
-            Border buttonBorder = BorderFactory.createEmptyBorder(10, 40, 10, 40);
+            Font buttonFont = new Font(Font.SANS_SERIF, Font.BOLD, 14);
+            Border buttonBorder = BorderFactory.createEmptyBorder(10, 0, 10, 0);
 
             createScaleButtons(panel, true, buttonFont, buttonBorder);
 
@@ -58,15 +64,9 @@ public class DesktopView implements View {
 
             JPanel inputTemperatureFieldWrapper = new JPanel(new BorderLayout());
             inputTemperatureFieldWrapper.setOpaque(false);
-            inputTemperatureFieldWrapper.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+            inputTemperatureFieldWrapper.setMaximumSize(new Dimension(600, 36));
 
-            JTextField inputTemperatureField = new JTextField(20);
-            inputTemperatureField.setFont(labelFont);
-            inputTemperatureField.setCaretColor(Color.WHITE);
-            inputTemperatureField.setForeground(Color.WHITE);
-            inputTemperatureField.setBackground(new Color(60, 60, 60));
-            inputTemperatureField.setMargin(new Insets(12, 15, 12, 15));
-            inputTemperatureField.setMaximumSize(new Dimension(600, 30));
+            JTextField inputTemperatureField = createInputTemperatureTextField(labelFont, labelBorder);
 
             inputTemperatureFieldWrapper.add(inputTemperatureField, BorderLayout.CENTER);
             panel.add(inputTemperatureFieldWrapper);
@@ -78,7 +78,7 @@ public class DesktopView implements View {
 
             createScaleButtons(panel, false, buttonFont, buttonBorder);
 
-            JButton convertButton = getConvertButton(inputTemperatureField, frame, buttonFont);
+            JButton convertButton = createConvertButton(inputTemperatureField, frame, buttonFont);
             panel.add(convertButton);
 
             outputTemperatureLabel = new JLabel();
@@ -91,29 +91,41 @@ public class DesktopView implements View {
         });
     }
 
+    private static JTextField createInputTemperatureTextField(Font labelFont, Border labelBorder) {
+        JTextField inputTemperatureField = new JTextField(20);
+
+        inputTemperatureField.setFont(labelFont);
+        inputTemperatureField.setCaretColor(Color.WHITE);
+        inputTemperatureField.setForeground(Color.WHITE);
+        inputTemperatureField.setBackground(new Color(60, 60, 60));
+        inputTemperatureField.setMargin(new Insets(6, 12, 6, 12));
+        inputTemperatureField.setPreferredSize(new Dimension(600, 36));
+        inputTemperatureField.setBorder(labelBorder);
+
+        return inputTemperatureField;
+    }
+
     private void createScaleButtons(JPanel panel, boolean isInput, Font buttonFont, Border buttonBorder) {
-        List<String> scales = controller.getAvailableTemperatureScales();
+        List<Scale> scales = controller.getAvailableScales();
         ButtonGroup scaleButtonGroup = new ButtonGroup();
 
-        String currentScale = isInput ? controller.getInputTemperatureScale() : controller.getOutputTemperatureScale();
-
-        for (String scale : scales) {
-            JRadioButton scaleButton = new JRadioButton(scale);
+        for (Scale scale : scales) {
+            JRadioButton scaleButton = new JRadioButton(scale.getName());
             scaleButton.setFont(buttonFont);
             scaleButton.setBorder(buttonBorder);
             scaleButton.setOpaque(false);
             scaleButton.setFocusPainted(false);
 
 
-            if (scale.equals(currentScale)) {
+            if (scale.equals(scales.getFirst())) {
                 scaleButton.setSelected(true);
             }
 
             scaleButton.addActionListener(_ -> {
                 if (isInput) {
-                    controller.setInputTemperatureScale(scale);
+                    controller.setInputScale(scale);
                 } else {
-                    controller.setOutputTemperatureScale(scale);
+                    controller.setOutputScale(scale);
                 }
             });
 
@@ -122,7 +134,7 @@ public class DesktopView implements View {
         }
     }
 
-    private JButton getConvertButton(JTextField inputTemperatureField, JFrame frame, Font buttonFont) {
+    private JButton createConvertButton(JTextField inputTemperatureField, JFrame frame, Font buttonFont) {
         JButton convertButton = new JButton("Конвертировать");
 
         convertButton.setFont(buttonFont);
@@ -135,8 +147,8 @@ public class DesktopView implements View {
 
         convertButton.addActionListener(_ -> {
             try {
-                double inputTemperature = Double.parseDouble(inputTemperatureField.getText());
-                controller.convertTemperature(inputTemperature, controller.getOutputTemperatureScale());
+                double inputTemperature = Double.parseDouble(inputTemperatureField.getText().trim());
+                controller.convert(inputTemperature);
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(frame, "Температура должна быть числом.", "Ошибка",
                         JOptionPane.ERROR_MESSAGE);
@@ -147,15 +159,10 @@ public class DesktopView implements View {
     }
 
     @Override
-    public void setController(Controller controller) {
-        this.controller = controller;
-    }
-
-    @Override
     public void temperatureConverted() {
         double outputTemperature = converter.getOutputTemperature();
-        String outputTemperatureScale = controller.getOutputTemperatureScale();
+        Scale outputScale = controller.getOutputScale();
 
-        outputTemperatureLabel.setText("Температура в шкале " + outputTemperatureScale + ": " + outputTemperature);
+        outputTemperatureLabel.setText("Температура в шкале " + outputScale.getName() + ": " + outputTemperature);
     }
 }
