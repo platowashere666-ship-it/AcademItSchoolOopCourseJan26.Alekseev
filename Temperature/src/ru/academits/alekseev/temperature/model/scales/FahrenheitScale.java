@@ -1,13 +1,13 @@
-package ru.academits.alekseev.temperature.model;
+package ru.academits.alekseev.temperature.model.scales;
 
 public class FahrenheitScale implements Scale {
     @Override
-    public double convertToDefaultScale(double temperature) {
+    public double convertToCelsiusScale(double temperature) {
         return (temperature - 32) / 1.8;
     }
 
     @Override
-    public double convert(double temperature) {
+    public double convertToOutputScale(double temperature) {
         return (temperature * 1.8) + 32;
     }
 

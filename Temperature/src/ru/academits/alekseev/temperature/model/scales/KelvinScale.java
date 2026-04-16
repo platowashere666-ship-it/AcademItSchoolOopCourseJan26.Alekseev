@@ -1,13 +1,13 @@
-package ru.academits.alekseev.temperature.model;
+package ru.academits.alekseev.temperature.model.scales;
 
 public class KelvinScale implements Scale {
     @Override
-    public double convertToDefaultScale(double temperature) {
+    public double convertToCelsiusScale(double temperature) {
         return temperature - 273.15;
     }
 
     @Override
-    public double convert(double temperature) {
+    public double convertToOutputScale(double temperature) {
         return temperature + 273.15;
     }
 

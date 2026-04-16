@@ -2,7 +2,7 @@ package ru.academits.alekseev.temperature.view;
 
 import ru.academits.alekseev.temperature.controller.Controller;
 import ru.academits.alekseev.temperature.model.Converter;
-import ru.academits.alekseev.temperature.model.Scale;
+import ru.academits.alekseev.temperature.model.scales.Scale;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -62,14 +62,9 @@ public class DesktopView implements View {
             enterTemperatureLabel.setBorder(labelBorder);
             panel.add(enterTemperatureLabel);
 
-            JPanel inputTemperatureFieldWrapper = new JPanel(new BorderLayout());
-            inputTemperatureFieldWrapper.setOpaque(false);
-            inputTemperatureFieldWrapper.setMaximumSize(new Dimension(600, 36));
-
-            JTextField inputTemperatureField = createInputTemperatureTextField(labelFont, labelBorder);
-
-            inputTemperatureFieldWrapper.add(inputTemperatureField, BorderLayout.CENTER);
-            panel.add(inputTemperatureFieldWrapper);
+            JTextField inputTemperatureField = createInputTemperatureTextField(labelFont);
+            inputTemperatureField.setMaximumSize(new Dimension(400, 36));
+            panel.add(inputTemperatureField);
 
             JLabel chooseOutputTemperatureScaleLabel = new JLabel("Выберите температурную шкалу результата:");
             chooseOutputTemperatureScaleLabel.setFont(labelFont);
@@ -91,16 +86,19 @@ public class DesktopView implements View {
         });
     }
 
-    private static JTextField createInputTemperatureTextField(Font labelFont, Border labelBorder) {
+    private static JTextField createInputTemperatureTextField(Font labelFont) {
         JTextField inputTemperatureField = new JTextField(20);
 
         inputTemperatureField.setFont(labelFont);
         inputTemperatureField.setCaretColor(Color.WHITE);
         inputTemperatureField.setForeground(Color.WHITE);
         inputTemperatureField.setBackground(new Color(60, 60, 60));
-        inputTemperatureField.setMargin(new Insets(6, 12, 6, 12));
-        inputTemperatureField.setPreferredSize(new Dimension(600, 36));
-        inputTemperatureField.setBorder(labelBorder);
+        inputTemperatureField.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        Border outerBorder = BorderFactory.createLineBorder(new Color(100, 100, 100), 1);
+        Border innerBorder = BorderFactory.createEmptyBorder(8, 16, 8, 12);
+
+        inputTemperatureField.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 
         return inputTemperatureField;
     }
@@ -115,7 +113,6 @@ public class DesktopView implements View {
             scaleButton.setBorder(buttonBorder);
             scaleButton.setOpaque(false);
             scaleButton.setFocusPainted(false);
-
 
             if (scale.equals(scales.getFirst())) {
                 scaleButton.setSelected(true);
@@ -161,8 +158,6 @@ public class DesktopView implements View {
     @Override
     public void temperatureConverted() {
         double outputTemperature = converter.getOutputTemperature();
-        Scale outputScale = controller.getOutputScale();
-
-        outputTemperatureLabel.setText("Температура в шкале " + outputScale.getName() + ": " + outputTemperature);
+        outputTemperatureLabel.setText("Результат" + ": " + outputTemperature);
     }
 }

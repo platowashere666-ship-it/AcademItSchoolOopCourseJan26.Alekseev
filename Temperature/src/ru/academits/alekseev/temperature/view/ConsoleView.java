@@ -2,7 +2,7 @@ package ru.academits.alekseev.temperature.view;
 
 import ru.academits.alekseev.temperature.controller.Controller;
 import ru.academits.alekseev.temperature.model.Converter;
-import ru.academits.alekseev.temperature.model.Scale;
+import ru.academits.alekseev.temperature.model.scales.Scale;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -10,7 +10,6 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class ConsoleView implements View {
-
     private final Converter converter;
     private Controller controller;
 
@@ -27,7 +26,7 @@ public class ConsoleView implements View {
     public void start() {
         Scanner scanner = new Scanner(System.in);
 
-        for (; ; ) {
+        while (true) {
             try {
                 Scale inputScale = chooseScale(scanner, "Выберите входную температурную шкалу:");
                 controller.setInputScale(inputScale);
@@ -41,7 +40,7 @@ public class ConsoleView implements View {
                 controller.convert(inputTemperature);
             } catch (InputMismatchException e) {
                 System.out.println("Ошибка: введите число.");
-                scanner.nextLine();
+                break;
             }
         }
     }
@@ -56,7 +55,6 @@ public class ConsoleView implements View {
         }
 
         System.out.print("Ваш выбор: ");
-
         int choice = scanner.nextInt();
 
         if (choice < 1 || choice > scales.size()) {
@@ -68,14 +66,8 @@ public class ConsoleView implements View {
 
     @Override
     public void temperatureConverted() {
-        double result = converter.getOutputTemperature();
-        Scale outputScale = controller.getOutputScale();
+        double outputTemperature = converter.getOutputTemperature();
 
-        if (outputScale == null) {
-            System.out.println("Результат: " + result);
-            return;
-        }
-
-        System.out.printf("Результат: %.2f %s%n%n", result, outputScale.getName());
+        System.out.println("Результат: " + outputTemperature);
     }
 }

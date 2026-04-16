@@ -1,7 +1,7 @@
 package ru.academits.alekseev.temperature.controller;
 
 import ru.academits.alekseev.temperature.model.Converter;
-import ru.academits.alekseev.temperature.model.Scale;
+import ru.academits.alekseev.temperature.model.scales.Scale;
 import ru.academits.alekseev.temperature.view.View;
 
 import java.util.List;
@@ -29,10 +29,6 @@ public class Controller {
 
     public void setInputScale(Scale inputTemperatureScale) {
         converter.setInputScale(inputTemperatureScale);
-    }
-
-    public Scale getOutputScale() {
-        return converter.getOutputScale();
     }
 
     public void setOutputScale(Scale outputTemperatureScale) {

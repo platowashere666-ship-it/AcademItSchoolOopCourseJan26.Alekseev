@@ -1,5 +1,7 @@
 package ru.academits.alekseev.temperature.model;
 
+import ru.academits.alekseev.temperature.model.scales.Scale;
+
 import java.util.List;
 
 public interface Converter {
@@ -8,8 +10,6 @@ public interface Converter {
     List<Scale> getAvailableScales();
 
     void setInputScale(Scale inputScale);
-
-    Scale getOutputScale();
 
     void setOutputScale(Scale outputScale);
 
