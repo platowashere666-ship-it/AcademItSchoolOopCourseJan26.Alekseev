@@ -14,7 +14,9 @@ public class Main {
     public static void main(String[] args) {
         List<Scale> temperatureScales = new ArrayList<>();
         Converter converter = new TemperatureConverter(temperatureScales);
+
         View view = new DesktopView(converter);
+
         Controller controller = new Controller(converter, view);
         controller.start();
     }

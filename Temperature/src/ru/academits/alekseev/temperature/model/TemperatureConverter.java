@@ -19,24 +19,23 @@ public class TemperatureConverter implements Converter {
     private double outputTemperature;
 
     public TemperatureConverter(List<Scale> temperatureScales) {
-        this.temperatureScales = Objects.requireNonNull(List.copyOf(temperatureScales),
-                "Список шкал не может быть null.");
+        if (temperatureScales == null || temperatureScales.isEmpty()) {
+            this.temperatureScales = List.of(new CelsiusScale(), new FahrenheitScale(), new KelvinScale());
+        } else {
+            this.temperatureScales = List.copyOf(temperatureScales);
+        }
     }
 
     @Override
     public void convert(double inputTemperature) {
         double celsiusTemperature = inputScale.convertToCelsiusScale(inputTemperature);
-        outputTemperature = outputScale.convertToOutputScale(celsiusTemperature);
+        outputTemperature = outputScale.convertFromCelsiusScale(celsiusTemperature);
 
         notifyListeners();
     }
 
     @Override
     public List<Scale> getAvailableScales() {
-        if (temperatureScales.isEmpty()) {
-            return List.of(new CelsiusScale(), new FahrenheitScale(), new KelvinScale());
-        }
-
         return List.copyOf(temperatureScales);
     }
 
