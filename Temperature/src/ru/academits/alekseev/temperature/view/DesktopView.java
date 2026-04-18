@@ -15,6 +15,8 @@ public class DesktopView implements View {
     private Controller controller;
     private JLabel outputTemperatureLabel;
 
+    private boolean isStarted = false;
+
     public DesktopView(Converter converter) {
         this.converter = Objects.requireNonNull(converter, "Converter не может быть null.");
     }
@@ -26,6 +28,16 @@ public class DesktopView implements View {
 
     @Override
     public void start() {
+        if (isStarted) {
+            throw new IllegalStateException("Ошибка. Метод уже был вызван.");
+        }
+
+        if (controller == null) {
+            throw new NullPointerException("Controller не может быть null.");
+        }
+
+        isStarted = true;
+
         SwingUtilities.invokeLater(() -> {
             List<Scale> availableScales = controller.getAvailableScales();
 

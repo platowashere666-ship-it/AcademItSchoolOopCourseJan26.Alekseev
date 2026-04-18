@@ -19,7 +19,11 @@ public class TemperatureConverter implements Converter {
     private double outputTemperature;
 
     public TemperatureConverter(List<Scale> temperatureScales) {
-        if (temperatureScales == null || temperatureScales.isEmpty()) {
+        if (temperatureScales == null) {
+            throw new NullPointerException("Список температур не может быть null.");
+        }
+
+        if (temperatureScales.isEmpty()) {
             this.temperatureScales = List.of(new CelsiusScale(), new FahrenheitScale(), new KelvinScale());
         } else {
             this.temperatureScales = List.copyOf(temperatureScales);

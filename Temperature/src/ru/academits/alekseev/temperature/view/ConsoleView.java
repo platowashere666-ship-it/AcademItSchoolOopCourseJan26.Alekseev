@@ -13,6 +13,8 @@ public class ConsoleView implements View {
     private final Converter converter;
     private Controller controller;
 
+    private boolean isStarted = false;
+
     public ConsoleView(Converter converter) {
         this.converter = Objects.requireNonNull(converter, "Converter не может быть null");
     }
@@ -24,6 +26,16 @@ public class ConsoleView implements View {
 
     @Override
     public void start() {
+        if (isStarted) {
+            throw new IllegalStateException("Ошибка. Метод уже был вызван.");
+        }
+
+        if (controller == null) {
+            throw new NullPointerException("Controller не может быть null.");
+        }
+
+        isStarted = true;
+
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
