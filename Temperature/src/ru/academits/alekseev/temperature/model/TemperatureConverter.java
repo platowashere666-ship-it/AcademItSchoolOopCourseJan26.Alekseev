@@ -1,8 +1,5 @@
 package ru.academits.alekseev.temperature.model;
 
-import ru.academits.alekseev.temperature.model.scales.CelsiusScale;
-import ru.academits.alekseev.temperature.model.scales.FahrenheitScale;
-import ru.academits.alekseev.temperature.model.scales.KelvinScale;
 import ru.academits.alekseev.temperature.model.scales.Scale;
 
 import java.util.ArrayList;
@@ -24,10 +21,10 @@ public class TemperatureConverter implements Converter {
         }
 
         if (temperatureScales.isEmpty()) {
-            this.temperatureScales = List.of(new CelsiusScale(), new FahrenheitScale(), new KelvinScale());
-        } else {
-            this.temperatureScales = List.copyOf(temperatureScales);
+            throw new IllegalArgumentException("Список температур не может быть пуст.");
         }
+
+        this.temperatureScales = List.copyOf(temperatureScales);
     }
 
     @Override

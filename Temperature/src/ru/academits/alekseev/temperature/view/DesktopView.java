@@ -15,7 +15,7 @@ public class DesktopView implements View {
     private Controller controller;
     private JLabel outputTemperatureLabel;
 
-    private boolean isStarted = false;
+    private boolean isStarted;
 
     public DesktopView(Converter converter) {
         this.converter = Objects.requireNonNull(converter, "Converter не может быть null.");

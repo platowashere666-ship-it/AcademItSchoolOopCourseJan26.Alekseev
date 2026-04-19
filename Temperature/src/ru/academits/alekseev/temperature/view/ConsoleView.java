@@ -13,7 +13,7 @@ public class ConsoleView implements View {
     private final Converter converter;
     private Controller controller;
 
-    private boolean isStarted = false;
+    private boolean isStarted;
 
     public ConsoleView(Converter converter) {
         this.converter = Objects.requireNonNull(converter, "Converter не может быть null");
