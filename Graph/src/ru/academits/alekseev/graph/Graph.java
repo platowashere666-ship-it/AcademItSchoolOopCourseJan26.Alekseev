@@ -28,6 +28,11 @@ public class Graph {
         adjacencyMatrix[from][to] = 1;
     }
 
+    public void addEdge(int from, int to, int weight) {
+        addEdge(from, to);
+        adjacencyMatrix[from][to] = weight;
+    }
+
     public void traverseBreadthFirst(Consumer<Integer> consumer) {
         Objects.requireNonNull(consumer, "Consumer не может быть null.");
 
@@ -39,19 +44,21 @@ public class Graph {
         Queue<Integer> queue = new LinkedList<>();
 
         for (int i = 0; i < size; ++i) {
-            if (!visited[i]) {
-                queue.add(i);
-                visited[i] = true;
+            if (visited[i]) {
+                continue;
+            }
 
-                while (!queue.isEmpty()) {
-                    int currentVertex = queue.poll();
-                    consumer.accept(currentVertex);
+            queue.add(i);
+            visited[i] = true;
 
-                    for (int neighbor = 0; neighbor < size; ++neighbor) {
-                        if (adjacencyMatrix[currentVertex][neighbor] == 1 && !visited[neighbor]) {
-                            visited[neighbor] = true;
-                            queue.add(neighbor);
-                        }
+            while (!queue.isEmpty()) {
+                int currentVertex = queue.remove();
+                consumer.accept(currentVertex);
+
+                for (int neighbor = 0; neighbor < size; ++neighbor) {
+                    if (adjacencyMatrix[currentVertex][neighbor] != 0 && !visited[neighbor]) {
+                        queue.add(neighbor);
+                        visited[neighbor] = true;
                     }
                 }
             }
@@ -69,21 +76,21 @@ public class Graph {
         Deque<Integer> stack = new LinkedList<>();
 
         for (int i = 0; i < size; ++i) {
-            if (!visited[i]) {
-                stack.push(i);
+            if (visited[i]) {
+                continue;
+            }
 
-                while (!stack.isEmpty()) {
-                    int currentVertex = stack.pop();
+            stack.push(i);
+            visited[i] = true;
 
-                    if (!visited[currentVertex]) {
-                        visited[currentVertex] = true;
-                        consumer.accept(currentVertex);
+            while (!stack.isEmpty()) {
+                int currentVertex = stack.pop();
+                consumer.accept(currentVertex);
 
-                        for (int neighbor = size - 1; neighbor >= 0; --neighbor) {
-                            if (adjacencyMatrix[currentVertex][neighbor] == 1 && !visited[neighbor]) {
-                                stack.push(neighbor);
-                            }
-                        }
+                for (int neighbor = size - 1; neighbor >= 0; --neighbor) {
+                    if (adjacencyMatrix[currentVertex][neighbor] != 0 && !visited[neighbor]) {
+                        stack.push(neighbor);
+                        visited[neighbor] = true;
                     }
                 }
             }
@@ -99,10 +106,12 @@ public class Graph {
 
         boolean[] visited = new boolean[size];
 
-        for (int i = 0; i < visited.length; ++i) {
-            if (!visited[i]) {
-                traverseDepthFirstRecursive(consumer, i, visited);
+        for (int i = 0; i < size; ++i) {
+            if (visited[i]) {
+                continue;
             }
+
+            traverseDepthFirstRecursive(consumer, i, visited);
         }
     }
 
@@ -111,7 +120,7 @@ public class Graph {
         consumer.accept(currentVertex);
 
         for (int neighbor = 0; neighbor < size; ++neighbor) {
-            if (adjacencyMatrix[currentVertex][neighbor] == 1 && !visited[neighbor]) {
+            if (adjacencyMatrix[currentVertex][neighbor] != 0 && !visited[neighbor]) {
                 traverseDepthFirstRecursive(consumer, neighbor, visited);
             }
         }

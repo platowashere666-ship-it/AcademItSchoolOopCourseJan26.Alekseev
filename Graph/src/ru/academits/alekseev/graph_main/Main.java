@@ -10,9 +10,9 @@ public class Main {
         graph.addEdge(0, 2);
         graph.addEdge(1, 2);
         graph.addEdge(2, 0);
-        graph.addEdge(2, 3);
+        graph.addEdge(2, 3, 2);
         graph.addEdge(3, 3);
-        graph.addEdge(3, 4);
+        graph.addEdge(3, 4, 4);
         graph.addEdge(4, 3);
 
         System.out.println("Создали граф: " + graph);
