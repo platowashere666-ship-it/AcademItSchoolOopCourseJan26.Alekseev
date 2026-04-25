@@ -17,6 +17,10 @@ public class Graph {
     }
 
     public void addEdge(int from, int to) {
+        addEdge(from, to, 1);
+    }
+
+    public void addEdge(int from, int to, int weight) {
         if (from < 0 || from >= size) {
             throw new IllegalArgumentException("Первая вершина должна быть >= 0 и < " + size + ". Первая вершина: " + from);
         }
@@ -25,11 +29,6 @@ public class Graph {
             throw new IllegalArgumentException("Вторая вершина должна быть >= 0 и < " + size + ". Вторая вершина: " + to);
         }
 
-        adjacencyMatrix[from][to] = 1;
-    }
-
-    public void addEdge(int from, int to, int weight) {
-        addEdge(from, to);
         adjacencyMatrix[from][to] = weight;
     }
 
@@ -107,11 +106,9 @@ public class Graph {
         boolean[] visited = new boolean[size];
 
         for (int i = 0; i < size; ++i) {
-            if (visited[i]) {
-                continue;
+            if (!visited[i]) {
+                traverseDepthFirstRecursive(consumer, i, visited);
             }
-
-            traverseDepthFirstRecursive(consumer, i, visited);
         }
     }
 
