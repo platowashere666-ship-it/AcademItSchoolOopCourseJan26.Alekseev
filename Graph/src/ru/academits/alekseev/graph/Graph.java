@@ -1,7 +1,7 @@
 package ru.academits.alekseev.graph;
 
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 public class Graph {
     private final int size;
@@ -32,7 +32,7 @@ public class Graph {
         adjacencyMatrix[from][to] = weight;
     }
 
-    public void traverseBreadthFirst(Consumer<Integer> consumer) {
+    public void traverseBreadthFirst(IntConsumer consumer) {
         Objects.requireNonNull(consumer, "Consumer не может быть null.");
 
         if (size == 0) {
@@ -64,7 +64,7 @@ public class Graph {
         }
     }
 
-    public void traverseDepthFirst(Consumer<Integer> consumer) {
+    public void traverseDepthFirst(IntConsumer consumer) {
         Objects.requireNonNull(consumer, "Consumer не может быть null.");
 
         if (size == 0) {
@@ -96,7 +96,7 @@ public class Graph {
         }
     }
 
-    public void traverseDepthFirstRecursive(Consumer<Integer> consumer) {
+    public void traverseDepthFirstRecursive(IntConsumer consumer) {
         Objects.requireNonNull(consumer, "Consumer не может быть null.");
 
         if (size == 0) {
@@ -112,7 +112,7 @@ public class Graph {
         }
     }
 
-    private void traverseDepthFirstRecursive(Consumer<Integer> consumer, int currentVertex, boolean[] visited) {
+    private void traverseDepthFirstRecursive(IntConsumer consumer, int currentVertex, boolean[] visited) {
         visited[currentVertex] = true;
         consumer.accept(currentVertex);
 
